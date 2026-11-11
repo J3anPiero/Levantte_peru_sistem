@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0e131a;
+  --color-ink-2: #0a0e13;
+  --color-steel: #1f2933;
+  --color-steel-2: #334155;
+  --color-brand: #f0702a;
+  --color-brand-deep: #c2410c;
+  --color-brand-dark: #9a3412;
+  --color-brand-soft: #fff4ec;
+  --color-mist: #f5f7fa;
+  --color-line: #e2e7ed;
+  --color-line-2: #cbd3dc;
+  --color-muted: #5c6b7a;
+  --color-muted-2: #aeb8c4;
+  --color-ok: #1e7f4f;
+  --color-ok-soft: #e6f4ec;
+  --color-warn: #b45309;
+  --color-warn-soft: #fef3e2;
+  --color-danger: #b42318;
+  --color-danger-soft: #fdecec;
+  --color-info: #1d4ed8;
+  --color-info-soft: #e8eef7;
+  --color-whatsapp: #25d366;
+  --radius-card: 14px;
+  --shadow-card: 0 12px 32px rgba(14, 19, 26, 0.1);
+  --shadow-float: 0 20px 50px rgba(14, 19, 26, 0.14);
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-mist text-ink font-sans;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+@utility btn {
+  @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] px-5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6;
+  }
+  .btn-primary {
+    @apply btn bg-brand-deep text-white hover:bg-brand-dark;
+  }
+  .btn-dark {
+    @apply btn bg-ink text-white hover:bg-steel;
+  }
+  .btn-accent {
+    @apply btn bg-brand text-ink hover:bg-[#e3611c];
+  }
+  .btn-outline {
+    @apply btn border-[1.5px] border-line-2 bg-white text-ink hover:border-ink;
+  }
+  .card {
+    @apply rounded-card border border-line bg-white;
+  }
+  .input {
+    @apply h-11 w-full rounded-[10px] border-[1.5px] border-line-2 bg-white px-3 text-sm text-ink placeholder:text-muted-2 focus:border-brand focus:outline-none;
+  }
+  .label {
+    @apply text-[13px] font-semibold text-ink;
+  }
+  .kicker {
+    @apply text-xs font-bold tracking-[0.14em] uppercase text-brand-deep;
+  }
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-line-2 bg-white px-3 py-1.5 text-[13px] font-medium;
+  }
+}

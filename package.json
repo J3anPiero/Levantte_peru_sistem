@@ -1,0 +1,27 @@
+{
+  "name": "levante-peru-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tienda virtual de repuestos automotrices LEVANTE PERÚ",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.72.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.0"
+  }
+}
