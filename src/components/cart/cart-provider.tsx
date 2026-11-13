@@ -160,7 +160,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const subtotal = round2(lines.reduce((s, l) => s + l.lineTotal, 0));
     const discount = coupon ? round2(lines.reduce((s, l) => s + coupon.apply(l.product, l.lineTotal), 0)) : 0;
     const afterDiscount = subtotal - discount;
-    const shippingEstimate = lines.length === 0 || afterDiscount >= site.freeShippingFrom ? 0 : site.limaShippingCost;
+    const shippingEstimate = lines.length === 0 || afterDiscount >= site.freeShippingFrom ? 0 : site.localShippingCost;
     return {
       items,
       lines,

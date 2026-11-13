@@ -107,7 +107,7 @@ export default async function ProductPage({ params }: Props) {
             <div className="flex items-center gap-2.5 text-sm">
               <span className={`size-2.5 rounded-full ${stock.tone === "ok" ? "bg-ok" : stock.tone === "warn" ? "bg-warn" : "bg-muted-2"}`} />
               <strong className={stock.tone === "ok" ? "text-ok" : stock.tone === "warn" ? "text-warn" : "text-muted"}>{stock.label}</strong>
-              {product.stock > 0 && <span className="text-muted">· {product.stock} unidades en almacén Lima · Despacho hoy si compras antes de las 3 p. m.</span>}
+              {product.stock > 0 && <span className="text-muted">· {product.stock} unidades en almacén {site.city} · Despacho hoy si compras antes de las 3 p. m.</span>}
             </div>
             {product.fits.length > 0 && (
               <div className="flex flex-wrap items-center gap-2.5 rounded-[10px] bg-ok-soft px-3.5 py-3 text-sm">
@@ -124,7 +124,7 @@ export default async function ProductPage({ params }: Props) {
           <div className="grid grid-cols-2 gap-3.5 text-[13px] leading-snug text-muted">
             {[
               { Icon: ShieldCheck, t: `Garantía de ${product.warrantyMonths} meses`, d: "Por defectos de fabricación." },
-              { Icon: Truck, t: "Envío a todo el Perú", d: "Lima 24 h · Provincias 2–5 días." },
+              { Icon: Truck, t: "Envío a todo el Perú", d: `${site.city} 24 h · Resto del país 2–5 días.` },
               { Icon: RefreshCw, t: "Devolución en 7 días", d: "Si la pieza no corresponde a tu vehículo." },
               { Icon: CreditCard, t: "Pago seguro", d: "Tarjetas, Yape, Plin y transferencia." },
             ].map(({ Icon, t, d }) => (

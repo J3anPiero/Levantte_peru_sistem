@@ -31,6 +31,14 @@ npm run typecheck  # verificación de tipos
   el componente `Logo` combina el isotipo con un logotipo tipográfico. `LogoArtwork` sirve el archivo
   original para usos grandes sobre negro.
 
+## Ciudad sede
+
+La tienda opera desde **Arequipa**. La ciudad vive en `src/lib/site.ts` (`city`, `metroArea`,
+`address`) y de ahí la toman los textos de envío, el almacén, las preguntas frecuentes y el checkout,
+así que para mudar la sede basta con cambiar esos campos. El reparto propio con entrega en 24 h es
+`localShippingCost`; el resto del país va por courier con `provinceShippingCost`. La lista de
+distritos del checkout es la de Arequipa y el departamento por defecto también.
+
 ## Animaciones
 
 Definidas como tokens `--animate-*` en `globals.css`, con sus `@keyframes` en el mismo archivo:

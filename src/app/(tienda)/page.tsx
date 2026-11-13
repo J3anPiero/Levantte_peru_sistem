@@ -14,19 +14,19 @@ const benefits = [
   { Icon: ShieldCheck, title: "Garantía certificada", text: "Todos los repuestos cuentan con garantía por defectos de fábrica y comprobante electrónico." },
   { Icon: Award, title: "Calidad verificada", text: "Marcas originales y alternativas homologadas, con código de pieza verificado antes del despacho." },
   { Icon: Headset, title: "Atención especializada", text: "Asesores técnicos que confirman la compatibilidad con tu vehículo por WhatsApp o teléfono." },
-  { Icon: Truck, title: "Envíos a todo el Perú", text: "Despacho el mismo día en Lima y couriers aliados para provincias, con seguimiento del pedido." },
+  { Icon: Truck, title: "Envíos a todo el Perú", text: `Despacho el mismo día en ${site.city} y couriers aliados para el resto del país, con seguimiento del pedido.` },
 ];
 
 /** Reseñas de muestra: reemplazar por reseñas reales del módulo de clientes. */
 const testimonials = [
-  { quote: "Pedí las pastillas para mi Hilux un lunes y llegaron al día siguiente. El código coincidía exactamente con el original.", name: "Carlos M.", meta: "Lima · Toyota Hilux 2019" },
-  { quote: "Como taller necesitamos respuesta rápida. El asesor confirmó la compatibilidad por WhatsApp y emitieron factura sin problema.", name: "Taller Rodríguez", meta: "Arequipa · Cliente mayorista" },
+  { quote: "Pedí las pastillas para mi Hilux un lunes y llegaron al día siguiente. El código coincidía exactamente con el original.", name: "Carlos M.", meta: "Arequipa · Toyota Hilux 2019" },
+  { quote: "Como taller necesitamos respuesta rápida. El asesor confirmó la compatibilidad por WhatsApp y emitieron factura sin problema.", name: "Taller Rodríguez", meta: "Cusco · Cliente mayorista" },
   { quote: "Buscar por mi vehículo me evitó comprar el filtro equivocado. Precio justo y el paquete llegó bien protegido.", name: "Andrea Q.", meta: "Trujillo · Kia Sportage 2018" },
 ];
 
 const stats = [
   { value: "+4,500", label: "Repuestos en catálogo" },
-  { value: "24 h", label: "Despacho en Lima" },
+  { value: "24 h", label: `Despacho en ${site.city}` },
   { value: "12 meses", label: "Garantía promedio" },
   { value: "+30", label: "Marcas homologadas" },
 ];
@@ -80,7 +80,7 @@ export default function HomePage() {
             </div>
             <div className="flex animate-fade-up flex-wrap gap-x-7 gap-y-2 pt-1 text-[13px] text-muted-2 [animation-delay:380ms]">
               <span className="flex items-center gap-2"><ShieldCheck className="size-[18px] text-brand" />Garantía en todos los repuestos</span>
-              <span className="flex items-center gap-2"><Truck className="size-[18px] text-brand" />Despacho en 24 h en Lima</span>
+              <span className="flex items-center gap-2"><Truck className="size-[18px] text-brand" />Despacho en 24 h en {site.city}</span>
               <span className="flex items-center gap-2"><CreditCard className="size-[18px] text-brand" />Pago seguro</span>
             </div>
           </div>
@@ -182,8 +182,8 @@ export default function HomePage() {
         <Reveal delay={120}>
           <div className="flex h-full flex-col justify-center gap-3 rounded-[18px] bg-brand p-8 text-white">
             <Truck className="size-9" strokeWidth={2} />
-            <h2 className="text-2xl leading-tight font-bold">Envío gratis en Lima Metropolitana</h2>
-            <p className="m-0 text-sm leading-relaxed text-white/90">En compras desde S/ {site.freeShippingFrom}. Provincias con tarifa preferencial.</p>
+            <h2 className="text-2xl leading-tight font-bold">Envío gratis en {site.metroArea}</h2>
+            <p className="m-0 text-sm leading-relaxed text-white/90">En compras desde S/ {site.freeShippingFrom}. Resto del país con tarifa preferencial.</p>
             <Link href="/preguntas-frecuentes#envios" className="text-sm font-bold text-white underline underline-offset-4">Conocer condiciones</Link>
           </div>
         </Reveal>

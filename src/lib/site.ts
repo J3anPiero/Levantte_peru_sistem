@@ -9,7 +9,13 @@ export const site = {
   tagline: "Repuestos automotrices originales y alternativos",
   description:
     "Comercialización de repuestos automotrices originales y alternativos para el mercado peruano, con asesoría técnica y despacho a nivel nacional.",
-  address: "[Dirección del local y almacén], Lima",
+
+  /** Ciudad donde están la tienda y el almacén. Define la zona de reparto local. */
+  city: "Arequipa",
+  /** Nombre de la zona de reparto propio, con entrega el mismo día o en 24 h. */
+  metroArea: "Arequipa Metropolitana",
+  address: "[Dirección del local y almacén], Arequipa",
+
   phone: "[Teléfono]",
   /** Número en formato internacional sin "+" para los enlaces wa.me, por ejemplo 51987654321. */
   whatsapp: "51999999999",
@@ -22,7 +28,9 @@ export const site = {
     youtube: "#",
   },
   freeShippingFrom: 250,
-  limaShippingCost: 15,
+  /** Costo de reparto dentro de la ciudad sede. */
+  localShippingCost: 15,
+  /** Costo referencial de envío al resto del país. */
   provinceShippingCost: 25,
 };
 

@@ -12,15 +12,29 @@ import { formatPrice, igvIncluded, round2 } from "@/lib/format";
 import { nextOrderNumber, savePlacedOrder } from "@/lib/orders";
 import { site, whatsappLink } from "@/lib/site";
 
-const departments = ["Lima", "Arequipa", "La Libertad", "Piura", "Lambayeque", "Cusco", "Junín", "Ica"];
-const districts = ["San Borja", "Miraflores", "San Isidro", "Surco", "La Victoria", "Ate", "Los Olivos", "Callao"];
+/** El departamento sede va primero porque es el caso más frecuente. */
+const departments = ["Arequipa", "Lima", "Cusco", "Puno", "Tacna", "Moquegua", "La Libertad", "Piura", "Junín", "Ica"];
+const districts = [
+  "Arequipa (Cercado)",
+  "Yanahuara",
+  "Cayma",
+  "Cerro Colorado",
+  "José Luis Bustamante y Rivero",
+  "Paucarpata",
+  "Sachaca",
+  "Socabaya",
+  "Miraflores",
+  "Mariano Melgar",
+  "Alto Selva Alegre",
+  "Jacobo Hunter",
+];
 
-type Shipping = "lima" | "provincia" | "tienda";
+type Shipping = "local" | "provincia" | "tienda";
 type Payment = "tarjeta" | "yape" | "transferencia" | "contraentrega";
 
 const shippingOptions: { id: Shipping; Icon: typeof Truck; title: string; detail: string; cost: number; eta: string }[] = [
-  { id: "lima", Icon: Truck, title: "Envío express Lima Metropolitana", detail: "Entrega en 24 horas hábiles · Motorizado con seguimiento", cost: site.limaShippingCost, eta: "Mañana, entre 9:00 y 18:00" },
-  { id: "provincia", Icon: Building2, title: "Envío a provincias", detail: "Olva Courier o Shalom · 2 a 5 días hábiles · Pago en destino disponible", cost: site.provinceShippingCost, eta: "Entre 2 y 5 días hábiles" },
+  { id: "local", Icon: Truck, title: `Envío express ${site.metroArea}`, detail: "Entrega en 24 horas hábiles · Motorizado con seguimiento", cost: site.localShippingCost, eta: "Mañana, entre 9:00 y 18:00" },
+  { id: "provincia", Icon: Building2, title: "Envío al resto del país", detail: "Olva Courier o Shalom · 2 a 5 días hábiles · Pago en destino disponible", cost: site.provinceShippingCost, eta: "Entre 2 y 5 días hábiles" },
   { id: "tienda", Icon: Store, title: "Recojo en tienda", detail: `Listo en 2 horas · ${site.address} · ${site.hours}`, cost: 0, eta: "Hoy, en 2 horas" },
 ];
 
@@ -28,7 +42,7 @@ const paymentOptions: { id: Payment; Icon: typeof CreditCard; title: string; det
   { id: "tarjeta", Icon: CreditCard, title: "Tarjeta de crédito o débito", detail: "Visa, Mastercard, Amex · Hasta 6 cuotas sin interés" },
   { id: "yape", Icon: Smartphone, title: "Yape o Plin", detail: "Escanea el QR y confirma en segundos" },
   { id: "transferencia", Icon: Landmark, title: "Transferencia bancaria", detail: "BCP, BBVA, Interbank, Scotiabank · Validación en 1 hora" },
-  { id: "contraentrega", Icon: Wallet, title: "Pago contra entrega", detail: "Solo Lima Metropolitana · Efectivo o POS" },
+  { id: "contraentrega", Icon: Wallet, title: "Pago contra entrega", detail: `Solo ${site.metroArea} · Efectivo o POS` },
 ];
 
 function Field({ id, label, children }: { id: string; label: string; children: React.ReactNode }) {
@@ -59,8 +73,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState({
     nombres: "", apellidos: "", tipoDoc: "DNI", numDoc: "", telefono: "", email: "", crearCuenta: false,
     comprobante: "boleta" as "boleta" | "factura", ruc: "", razonSocial: "", direccionFiscal: "",
-    departamento: "Lima", provincia: "Lima", distrito: "San Borja", direccion: "", referencia: "", guardarDireccion: false,
-    envio: "lima" as Shipping, pago: "tarjeta" as Payment, cuotas: "Pago único", terminos: false,
+    departamento: site.city, provincia: site.city, distrito: "Yanahuara", direccion: "", referencia: "", guardarDireccion: false,
+    envio: "local" as Shipping, pago: "tarjeta" as Payment, cuotas: "Pago único", terminos: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -69,7 +83,7 @@ export default function CheckoutPage() {
 
   const shipping = shippingOptions.find((s) => s.id === form.envio)!;
   const afterDiscount = cart.subtotal - cart.discount;
-  const shippingCost = form.envio === "lima" && afterDiscount >= site.freeShippingFrom ? 0 : shipping.cost;
+  const shippingCost = form.envio === "local" && afterDiscount >= site.freeShippingFrom ? 0 : shipping.cost;
   const total = round2(afterDiscount + shippingCost);
 
   if (!cart.hydrated) return <div className="container-x py-16 text-sm text-muted">Cargando…</div>;
@@ -95,8 +109,8 @@ export default function CheckoutPage() {
       if (!form.razonSocial.trim()) e.razonSocial = "Ingresa la razón social";
     }
     if (form.envio !== "tienda" && !form.direccion.trim()) e.direccion = "Ingresa la dirección de entrega";
-    if (form.envio === "provincia" && form.departamento === "Lima") e.departamento = "Selecciona un departamento fuera de Lima";
-    if (form.pago === "contraentrega" && form.envio !== "lima") e.pago = "Pago contra entrega solo disponible con envío en Lima";
+    if (form.envio === "provincia" && form.departamento === site.city) e.departamento = `Selecciona un departamento fuera de ${site.city}`;
+    if (form.pago === "contraentrega" && form.envio !== "local") e.pago = `Pago contra entrega solo disponible con envío en ${site.city}`;
     if (!form.terminos) e.terminos = "Debes aceptar los términos para continuar";
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -182,7 +196,7 @@ export default function CheckoutPage() {
           <Section n={3} title="Método de envío">
             <div className="flex flex-col gap-2.5">
               {shippingOptions.map(({ id, Icon, title, detail, cost }) => {
-                const free = id === "tienda" || (id === "lima" && afterDiscount >= site.freeShippingFrom);
+                const free = id === "tienda" || (id === "local" && afterDiscount >= site.freeShippingFrom);
                 return (
                   <label key={id} className={clsx("flex cursor-pointer items-center gap-3.5 rounded-xl border-[1.5px] px-4 py-3.5", form.envio === id ? "border-brand-deep bg-[#FFF7F2]" : "border-line-2 bg-white")}>
                     <input type="radio" name="envio" checked={form.envio === id} onChange={() => set("envio", id)} className="size-5 accent-brand-deep" />

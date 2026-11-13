@@ -14,7 +14,7 @@ export default function TermsPage() {
         <p>El pedido se confirma una vez validado el pago. Los pagos por transferencia deben acreditarse dentro de las 24 horas; de lo contrario el pedido se cancela automáticamente.</p>
       </Section>
       <Section title="Envíos">
-        <p>Los plazos de entrega son estimados y se cuentan en días hábiles desde la confirmación del pago. Las entregas en provincias se realizan a través de couriers aliados.</p>
+        <p>Los plazos de entrega son estimados y se cuentan en días hábiles desde la confirmación del pago. Las entregas fuera de {site.city} se realizan a través de couriers aliados.</p>
       </Section>
       <Section title="Garantías y devoluciones">
         <p>Se rigen por nuestra política de garantías y devoluciones publicada en este sitio.</p>

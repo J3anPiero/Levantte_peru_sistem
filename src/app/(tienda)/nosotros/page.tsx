@@ -9,7 +9,7 @@ const values = [
   { Icon: ShieldCheck, t: "Confianza", d: "Cada pieza sale verificada por código y con comprobante electrónico." },
   { Icon: Award, t: "Calidad", d: "Trabajamos con marcas originales y alternativas homologadas." },
   { Icon: Headset, t: "Asesoría", d: "Técnicos que confirman la compatibilidad antes de que pagues." },
-  { Icon: Truck, t: "Cumplimiento", d: "Despacho el mismo día en Lima y seguimiento a provincias." },
+  { Icon: Truck, t: "Cumplimiento", d: `Despacho el mismo día en ${site.city} y seguimiento al resto del país.` },
 ];
 
 export default function AboutPage() {
@@ -20,7 +20,7 @@ export default function AboutPage() {
         <p>[Completar con la historia de la empresa: año de fundación, fundadores, hitos y cobertura actual.]</p>
       </Section>
       <Section id="empresa" title="Nuestra empresa">
-        <p>Contamos con almacén propio en Lima, asesores técnicos y alianzas con los principales couriers del país. Emitimos boletas y facturas electrónicas y ofrecemos condiciones especiales para talleres y mayoristas.</p>
+        <p>Contamos con almacén propio en {site.city}, asesores técnicos y alianzas con los principales couriers del país. Emitimos boletas y facturas electrónicas y ofrecemos condiciones especiales para talleres y mayoristas.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           {values.map(({ Icon, t, d }) => (
             <div key={t} className="card flex gap-3.5 p-5"><Icon className="size-6 shrink-0 text-brand-deep" /><span><strong className="block">{t}</strong><span className="text-sm text-muted">{d}</span></span></div>

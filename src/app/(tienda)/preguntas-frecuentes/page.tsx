@@ -18,8 +18,8 @@ const groups = [
     id: "envios",
     title: "Envíos y entregas",
     items: [
-      ["¿Cuánto cuesta el envío?", `En Lima Metropolitana el envío es gratis en compras desde S/ ${site.freeShippingFrom}; de lo contrario cuesta S/ ${site.limaShippingCost}. A provincias el costo referencial es S/ ${site.provinceShippingCost} con Olva o Shalom, con opción de pago en destino.`],
-      ["¿Cuánto demora la entrega?", "Lima: 24 horas hábiles. Provincias: de 2 a 5 días hábiles según destino. También puedes recoger en tienda en 2 horas."],
+      ["¿Cuánto cuesta el envío?", `En ${site.metroArea} el envío es gratis en compras desde S/ ${site.freeShippingFrom}; de lo contrario cuesta S/ ${site.localShippingCost}. Al resto del país el costo referencial es S/ ${site.provinceShippingCost} con Olva o Shalom, con opción de pago en destino.`],
+      ["¿Cuánto demora la entrega?", `${site.city}: 24 horas hábiles. Resto del país: de 2 a 5 días hábiles según destino. También puedes recoger en tienda en 2 horas.`],
       ["¿Cómo hago seguimiento?", "Recibirás el número de seguimiento por correo y WhatsApp. También puedes consultarlo desde tu cuenta."],
     ],
   },
@@ -27,7 +27,7 @@ const groups = [
     id: "pagos",
     title: "Pagos y comprobantes",
     items: [
-      ["¿Qué métodos de pago aceptan?", "Tarjetas Visa, Mastercard y American Express, Yape, Plin, transferencia bancaria y pago contra entrega en Lima."],
+      ["¿Qué métodos de pago aceptan?", `Tarjetas Visa, Mastercard y American Express, Yape, Plin, transferencia bancaria y pago contra entrega en ${site.city}.`],
       ["¿Emiten factura?", "Sí. Elige “Factura” en el checkout e ingresa tu RUC. Boletas y facturas se emiten electrónicamente y llegan a tu correo."],
       ["¿Es seguro pagar en la web?", "Los pagos con tarjeta se procesan en la pasarela certificada; nunca almacenamos tus datos de tarjeta."],
     ],

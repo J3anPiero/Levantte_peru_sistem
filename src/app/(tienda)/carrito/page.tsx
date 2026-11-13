@@ -97,11 +97,11 @@ export default function CartPage() {
               <Truck className="size-[18px] text-ok" />
               {freeShippingGap <= 0 ? (
                 <span>
-                  Tu pedido califica para <strong className="text-ok">envío gratis en Lima Metropolitana</strong>
+                  Tu pedido califica para <strong className="text-ok">envío gratis en {site.metroArea}</strong>
                 </span>
               ) : (
                 <span>
-                  Agrega <strong className="text-ink">{formatPrice(freeShippingGap)}</strong> más para envío gratis en Lima
+                  Agrega <strong className="text-ink">{formatPrice(freeShippingGap)}</strong> más para envío gratis en {site.city}
                 </span>
               )}
             </div>
@@ -140,7 +140,7 @@ export default function CartPage() {
             <div className="flex flex-col gap-2.5 border-t border-line pt-3 text-sm">
               <div className="flex justify-between"><span className="text-muted">Subtotal ({units} unidades)</span><span>{formatPrice(cart.subtotal)}</span></div>
               {cart.discount > 0 && <div className="flex justify-between"><span className="text-muted">Descuento por cupón</span><span className="text-ok">− {formatPrice(cart.discount)}</span></div>}
-              <div className="flex justify-between"><span className="text-muted">Envío estimado · Lima</span><span className={cart.shippingEstimate === 0 ? "text-ok" : ""}>{cart.shippingEstimate === 0 ? "Gratis" : formatPrice(cart.shippingEstimate)}</span></div>
+              <div className="flex justify-between"><span className="text-muted">Envío estimado · {site.city}</span><span className={cart.shippingEstimate === 0 ? "text-ok" : ""}>{cart.shippingEstimate === 0 ? "Gratis" : formatPrice(cart.shippingEstimate)}</span></div>
               <div className="flex justify-between text-xs text-muted"><span>Incluye IGV (18%)</span><span>{formatPrice(igvIncluded(cart.total))}</span></div>
             </div>
             <div className="flex items-baseline justify-between border-t border-line pt-3">
