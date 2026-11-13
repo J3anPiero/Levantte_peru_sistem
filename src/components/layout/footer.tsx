@@ -9,7 +9,7 @@ const Facebook = ({ className }: IconProps) => (
 const Instagram = ({ className }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg>
 );
-const Music2 = ({ className }: IconProps) => (
+const TikTok = ({ className }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M14 4v11a3.5 3.5 0 1 1-3.5-3.5" /><path d="M14 4c.5 2.5 2.3 4.2 5 4.5" /></svg>
 );
 const Youtube = ({ className }: IconProps) => (
@@ -53,11 +53,16 @@ const payments = ["Visa", "Mastercard", "Yape", "Plin", "Transferencia"];
 
 export function Footer({ compact = false }: { compact?: boolean }) {
   return (
-    <footer className="mt-auto bg-ink text-muted-2">
+    <footer className="relative mt-auto overflow-hidden bg-black text-muted-2">
+      {/* Línea roja superior y resplandor sutil */}
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-brand to-transparent" />
       {!compact && (
-        <div className="container-x grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-40 left-1/2 size-[520px] -translate-x-1/2 animate-glow rounded-full bg-brand/15 blur-[120px]" />
+      )}
+      {!compact && (
+        <div className="container-x relative grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
           <div className="flex flex-col gap-4">
-            <Logo size="md" />
+            <Logo size="lg" priority={false} />
             <p className="m-0 max-w-[340px] text-sm leading-relaxed">{site.description}</p>
             <div className="text-sm leading-[1.9]">
               <div>{site.address}</div>
@@ -70,10 +75,15 @@ export function Footer({ compact = false }: { compact?: boolean }) {
               {[
                 { href: site.social.facebook, label: "Facebook", Icon: Facebook },
                 { href: site.social.instagram, label: "Instagram", Icon: Instagram },
-                { href: site.social.tiktok, label: "TikTok", Icon: Music2 },
+                { href: site.social.tiktok, label: "TikTok", Icon: TikTok },
                 { href: site.social.youtube, label: "YouTube", Icon: Youtube },
               ].map(({ href, label, Icon }) => (
-                <a key={label} href={href} aria-label={label} className="flex size-[38px] items-center justify-center rounded-[10px] border border-steel-2 text-white hover:border-brand">
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="flex size-[38px] items-center justify-center rounded-[10px] border border-white/15 text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:bg-brand hover:shadow-red"
+                >
                   <Icon className="size-[18px]" />
                 </a>
               ))}
@@ -84,7 +94,11 @@ export function Footer({ compact = false }: { compact?: boolean }) {
               <div className="mb-3 font-display text-sm font-bold text-white">{col.title}</div>
               <div className="flex flex-col">
                 {col.links.map((l) => (
-                  <Link key={l.label} href={l.href} className="text-sm leading-8 text-muted-2 no-underline hover:text-white">
+                  <Link
+                    key={l.label}
+                    href={l.href}
+                    className="inline-block text-sm leading-8 text-muted-2 no-underline transition-all duration-300 hover:translate-x-1 hover:text-brand"
+                  >
                     {l.label}
                   </Link>
                 ))}
@@ -93,22 +107,22 @@ export function Footer({ compact = false }: { compact?: boolean }) {
           ))}
         </div>
       )}
-      <div className={compact ? "" : "border-t border-steel"}>
+      <div className={compact ? "" : "border-t border-white/10"}>
         <div className="container-x flex flex-wrap items-center justify-between gap-4 py-[18px] text-[13px]">
           <span>
             © {new Date().getFullYear()} {site.legalName} · RUC {site.ruc} · Todos los derechos reservados
           </span>
           {compact ? (
             <div className="flex flex-wrap gap-5">
-              <Link href="/garantias-y-devoluciones" className="text-muted-2 no-underline hover:text-white">Garantías y devoluciones</Link>
-              <Link href="/politica-de-privacidad" className="text-muted-2 no-underline hover:text-white">Privacidad</Link>
-              <Link href="/terminos-y-condiciones" className="text-muted-2 no-underline hover:text-white">Términos</Link>
-              <Link href="/contacto" className="text-muted-2 no-underline hover:text-white">Contacto</Link>
+              <Link href="/garantias-y-devoluciones" className="text-muted-2 no-underline transition-colors hover:text-brand">Garantías y devoluciones</Link>
+              <Link href="/politica-de-privacidad" className="text-muted-2 no-underline transition-colors hover:text-brand">Privacidad</Link>
+              <Link href="/terminos-y-condiciones" className="text-muted-2 no-underline transition-colors hover:text-brand">Términos</Link>
+              <Link href="/contacto" className="text-muted-2 no-underline transition-colors hover:text-brand">Contacto</Link>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               {payments.map((p) => (
-                <span key={p} className="rounded-md border border-steel-2 px-2.5 py-1 text-xs font-semibold text-white">
+                <span key={p} className="rounded-md border border-white/15 px-2.5 py-1 text-xs font-semibold text-white transition-colors duration-300 hover:border-brand">
                   {p}
                 </span>
               ))}

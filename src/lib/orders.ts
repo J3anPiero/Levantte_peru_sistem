@@ -14,7 +14,7 @@ export interface PlacedOrder extends Order {
   invoiceNumber: string;
 }
 
-const KEY = "levante-orders-v1";
+const KEY = "gaudi-orders-v1";
 
 export function nextOrderNumber() {
   const year = new Date().getFullYear();

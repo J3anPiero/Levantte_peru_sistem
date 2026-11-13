@@ -1,10 +1,10 @@
 /**
  * Datos corporativos del sitio. Reemplazar los valores entre corchetes
- * con la información real de LEVANTE PERÚ antes de publicar.
+ * con la información real de GAUDI antes de publicar.
  */
 export const site = {
-  name: "LEVANTE PERÚ",
-  legalName: "LEVANTE PERÚ S.A.C.",
+  name: "GAUDI",
+  legalName: "GAUDI S.A.C.",
   ruc: "[RUC]",
   tagline: "Repuestos automotrices originales y alternativos",
   description:
@@ -13,7 +13,7 @@ export const site = {
   phone: "[Teléfono]",
   /** Número en formato internacional sin "+" para los enlaces wa.me, por ejemplo 51987654321. */
   whatsapp: "51999999999",
-  email: "ventas@levanteperu.pe",
+  email: "ventas@gaudi.pe",
   hours: "Lun–Sáb 8:00–18:00",
   social: {
     facebook: "#",

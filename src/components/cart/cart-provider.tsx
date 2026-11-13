@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 import { round2 } from "@/lib/format";
 import type { CartItem, Product } from "@/lib/types";
 
-const STORAGE_KEY = "levante-cart-v1";
+const STORAGE_KEY = "gaudi-cart-v1";
 
 export interface Coupon {
   code: string;

@@ -19,7 +19,7 @@ export function ContentPage({ title, intro, kicker, children, aside }: Props) {
         {intro && <p className="m-0 text-[17px] leading-relaxed text-muted">{intro}</p>}
       </header>
       <div className={aside ? "grid items-start gap-8 lg:grid-cols-[1fr_340px]" : ""}>
-        <div className="prose-levante flex max-w-[820px] flex-col gap-8">{children}</div>
+        <div className="flex max-w-[820px] flex-col gap-8">{children}</div>
         {aside}
       </div>
     </div>

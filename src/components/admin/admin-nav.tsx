@@ -20,13 +20,13 @@ export function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
                 href={href}
                 onClick={onNavigate}
                 className={clsx(
-                  "flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-sm font-medium no-underline",
-                  active ? "bg-steel text-white shadow-[inset_3px_0_0_#F0702A]" : "text-muted-2 hover:bg-steel hover:text-white",
+                  "flex items-center gap-3 rounded-[10px] px-3.5 py-2.5 text-sm font-medium no-underline transition-all duration-300",
+                  active ? "bg-coal text-white shadow-[inset_3px_0_0_var(--color-brand)]" : "text-muted-2 hover:bg-coal hover:text-white",
                 )}
               >
-                <Icon className="size-[18px] shrink-0" strokeWidth={2} />
+                <Icon className={clsx("size-[18px] shrink-0 transition-colors", active && "text-brand")} strokeWidth={2} />
                 <span className="truncate">{label}</span>
-                {badge ? <span className="ml-auto rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-ink">{badge}</span> : null}
+                {badge ? <span className="ml-auto rounded-full bg-brand px-2 py-0.5 text-[11px] font-bold text-white">{badge}</span> : null}
               </Link>
             );
           })}

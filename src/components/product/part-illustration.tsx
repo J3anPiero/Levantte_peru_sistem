@@ -7,8 +7,8 @@ interface Props {
   className?: string;
 }
 
-const INK = "#0E131A";
-const FILL = "#E2E7ED";
+const INK = "#121215";
+const FILL = "#e6e6eb";
 const WHITE = "#fff";
 
 const shapes: Record<PartKind, React.ReactNode> = {

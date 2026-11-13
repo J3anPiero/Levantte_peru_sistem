@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import type { Product } from "@/lib/types";
-import { whatsappLink } from "@/lib/site";
+import { site, whatsappLink } from "@/lib/site";
 import { useCart } from "@/components/cart/cart-provider";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { QuantityInput } from "./quantity-input";
@@ -12,7 +12,7 @@ import { QuantityInput } from "./quantity-input";
 export function BuyBox({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const { add } = useCart();
-  const message = `Hola LEVANTE PERÚ, quisiera consultar por: ${product.name} (código ${product.sku}${product.oem ? `, OEM ${product.oem}` : ""}).`;
+  const message = `Hola ${site.name}, quisiera consultar por: ${product.name} (código ${product.sku}${product.oem ? `, OEM ${product.oem}` : ""}).`;
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-stretch gap-3">

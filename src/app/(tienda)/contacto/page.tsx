@@ -18,7 +18,7 @@ export default function ContactPage() {
             <div className="flex gap-3"><Clock className="size-5 shrink-0 text-brand" /><span><strong className="block text-white">Horario</strong>{site.hours}</span></div>
             <div className="flex gap-3"><Phone className="size-5 shrink-0 text-brand" /><span><strong className="block text-white">Teléfono</strong>{site.phone}</span></div>
             <div className="flex gap-3"><Mail className="size-5 shrink-0 text-brand" /><span><strong className="block text-white">Correo</strong>{site.email}</span></div>
-            <a href={whatsappLink("Hola LEVANTE PERÚ, quisiera hacer una consulta.")} target="_blank" rel="noopener noreferrer" className="btn mt-1 bg-whatsapp text-ink hover:bg-[#1fb957]"><MessageCircle className="size-[18px]" />Escribir por WhatsApp</a>
+            <a href={whatsappLink(`Hola ${site.name}, quisiera hacer una consulta.`)} target="_blank" rel="noopener noreferrer" className="btn mt-1 bg-whatsapp text-black hover:bg-[#1fb957]"><MessageCircle className="size-[18px]" />Escribir por WhatsApp</a>
           </div>
           <div className="card flex min-h-[220px] items-center justify-center p-6 text-center text-sm text-muted">[Mapa de ubicación: insertar iframe de Google Maps del local]</div>
         </aside>

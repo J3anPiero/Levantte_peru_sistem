@@ -11,6 +11,7 @@ import { Gallery } from "@/components/product/gallery";
 import { BuyBox } from "@/components/product/buy-box";
 import { ProductTabs } from "@/components/product/product-tabs";
 import { ProductCard } from "@/components/product/product-card";
+import { Reveal } from "@/components/ui/reveal";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -60,9 +61,11 @@ export default async function ProductPage({ params }: Props) {
       <Breadcrumbs items={[...path.map((c) => ({ href: `/catalogo/${c.slug}`, label: c.name })), { label: product.shortName ?? product.name }]} />
 
       <div className="grid items-start gap-8 lg:grid-cols-[7fr_5fr] lg:gap-10">
-        <Gallery product={product} />
+        <div className="animate-fade-up">
+          <Gallery product={product} />
+        </div>
 
-        <section aria-label="Información del producto" className="flex flex-col gap-4">
+        <section aria-label="Información del producto" className="flex animate-fade-up flex-col gap-4 [animation-delay:120ms]">
           <div className="flex items-center justify-between gap-3">
             <span className="text-xs font-bold tracking-[0.12em] text-brand-deep uppercase">{brand.name}</span>
             <span className="text-xs text-muted">SKU {product.sku}</span>
@@ -229,7 +232,11 @@ export default async function ProductPage({ params }: Props) {
           <Link href={`/catalogo/${path[0]?.slug ?? ""}`} className="text-sm font-semibold text-brand-deep no-underline">Ver más de {path[0]?.name}</Link>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {relatedProducts(product).map((p) => <ProductCard key={p.id} product={p} compact />)}
+          {relatedProducts(product).map((p, i) => (
+            <Reveal key={p.id} delay={i * 90} className="h-full">
+              <ProductCard product={p} compact />
+            </Reveal>
+          ))}
         </div>
       </section>
     </div>

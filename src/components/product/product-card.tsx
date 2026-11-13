@@ -15,13 +15,14 @@ interface Props {
 }
 
 export function ProductBadge({ product, rank }: { product: Product; rank?: number }) {
+  const base = "absolute top-3 left-3 z-10 rounded-md px-2 py-1 text-[11px] font-bold tracking-[0.08em]";
   if (rank) {
-    return <span className="absolute top-3 left-3 rounded-md bg-brand px-2 py-1 text-[11px] font-bold tracking-[0.08em] text-ink">{rank === 1 ? "#1 MÁS VENDIDO" : `#${rank}`}</span>;
+    return <span className={clsx(base, "bg-brand text-white shadow-red")}>{rank === 1 ? "#1 MÁS VENDIDO" : `#${rank}`}</span>;
   }
   const discount = product.compareAtPrice ? Math.round((1 - product.price / product.compareAtPrice) * 100) : 0;
-  if (product.type === "original") return <span className="absolute top-3 left-3 rounded-md bg-ink px-2 py-1 text-[11px] font-bold tracking-[0.08em] text-white">ORIGINAL</span>;
-  if (discount > 0) return <span className="absolute top-3 left-3 rounded-md bg-brand-deep px-2 py-1 text-[11px] font-bold tracking-[0.08em] text-white">-{discount}%</span>;
-  if (product.badges?.includes("nuevo")) return <span className="absolute top-3 left-3 rounded-md bg-ok px-2 py-1 text-[11px] font-bold tracking-[0.08em] text-white">NUEVO</span>;
+  if (product.type === "original") return <span className={clsx(base, "bg-black text-white")}>ORIGINAL</span>;
+  if (discount > 0) return <span className={clsx(base, "bg-brand text-white")}>-{discount}%</span>;
+  if (product.badges?.includes("nuevo")) return <span className={clsx(base, "bg-ok text-white")}>NUEVO</span>;
   return null;
 }
 
@@ -38,16 +39,23 @@ export function StockLabel({ product, className }: { product: Product; className
 export function ProductCard({ product, vehicle, rank, compact }: Props) {
   const brand = productBrand(product);
   const fit = fitsVehicle(product, vehicle);
-  const fitLine = product.fits.length ? describeFit(product.fits[0]).replace(/ ·.*$/, "") + (product.fits.length > 1 ? ` y ${product.fits.length - 1} más` : "") : "Compatible con múltiples modelos";
+  const fitLine = product.fits.length
+    ? describeFit(product.fits[0]).replace(/ ·.*$/, "") + (product.fits.length > 1 ? ` y ${product.fits.length - 1} más` : "")
+    : "Compatible con múltiples modelos";
+
   return (
-    <article className="card flex flex-col overflow-hidden transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card">
-      <Link href={`/producto/${product.slug}`} className={clsx("relative flex items-center justify-center bg-mist", compact ? "h-[150px]" : "h-[210px]")} aria-label={product.name}>
+    <article className="product-card h-full">
+      <Link
+        href={`/producto/${product.slug}`}
+        className={clsx("product-media relative flex items-center justify-center overflow-hidden bg-mist", compact ? "h-[150px]" : "h-[210px]")}
+        aria-label={product.name}
+      >
         <ProductBadge product={product} rank={rank} />
         <PartIllustration kind={product.kind} size={compact ? 92 : 128} />
       </Link>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <span className="text-[11px] font-bold tracking-[0.1em] text-muted uppercase">{brand.name}</span>
-        <Link href={`/producto/${product.slug}`} className="text-[15px] leading-snug font-semibold text-ink no-underline hover:text-brand-deep">
+        <Link href={`/producto/${product.slug}`} className="text-[15px] leading-snug font-semibold text-ink no-underline transition-colors duration-300 hover:text-brand">
           {product.shortName ?? product.name}
         </Link>
         <span className="text-xs text-muted">

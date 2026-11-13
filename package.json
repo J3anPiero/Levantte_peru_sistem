@@ -1,8 +1,8 @@
 {
-  "name": "levante-peru-web",
+  "name": "gaudi-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Tienda virtual de repuestos automotrices LEVANTE PERÚ",
+  "description": "Tienda virtual de repuestos automotrices GAUDI",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

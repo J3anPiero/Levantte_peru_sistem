@@ -6,6 +6,7 @@ import { categoryPath, facets, searchProducts } from "@/lib/catalog";
 import { buildQuery, parseCatalogParams, withoutValue, type SearchParams } from "@/lib/catalog-params";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ProductCard } from "@/components/product/product-card";
+import { Reveal } from "@/components/ui/reveal";
 import { VehicleSelector } from "@/components/home/vehicle-selector";
 import { AutoSubmitForm } from "./auto-submit-form";
 import { SortSelect } from "./sort-select";
@@ -17,7 +18,7 @@ interface Props {
 
 function FilterBlock({ title, children, dark }: { title: string; children: React.ReactNode; dark?: boolean }) {
   return (
-    <div className={clsx("flex flex-col gap-2.5 rounded-card border p-[18px]", dark ? "border-ink bg-ink text-white" : "border-line bg-white")}>
+    <div className={clsx("flex flex-col gap-2.5 rounded-card border p-[18px]", dark ? "border-black bg-black text-white" : "border-line bg-white")}>
       <div className="font-display text-sm font-bold">{title}</div>
       {children}
     </div>
@@ -68,7 +69,7 @@ export function CatalogView({ sp, categorySlug }: Props) {
           {category?.description && <p className="mt-1.5 text-[15px] text-muted">{category.description}</p>}
         </div>
         {vehicleLabel && (
-          <div className="flex items-center gap-2.5 rounded-xl bg-ink px-3.5 py-2.5 text-[13px] text-white">
+          <div className="flex animate-fade-up items-center gap-2.5 rounded-xl bg-black px-3.5 py-2.5 text-[13px] text-white">
             <Car className="size-[18px] text-brand" />
             <span>
               Mi vehículo: <strong>{vehicleLabel}</strong>
@@ -171,7 +172,7 @@ export function CatalogView({ sp, categorySlug }: Props) {
           {chips.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               {chips.map((c) => (
-                <Link key={c.label + c.href} href={c.href} className="chip text-ink no-underline hover:border-ink">
+                <Link key={c.label + c.href} href={c.href} className="chip text-ink no-underline hover:border-brand hover:text-brand">
                   {c.label}
                   <X className="size-3.5 text-muted" aria-label={`Quitar filtro ${c.label}`} />
                 </Link>
@@ -189,7 +190,11 @@ export function CatalogView({ sp, categorySlug }: Props) {
             </div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {result.items.map((p) => <ProductCard key={p.id} product={p} vehicle={vehicle} />)}
+              {result.items.map((p, i) => (
+                <Reveal key={p.id} delay={i * 70} className="h-full">
+                  <ProductCard product={p} vehicle={vehicle} />
+                </Reveal>
+              ))}
             </div>
           )}
 

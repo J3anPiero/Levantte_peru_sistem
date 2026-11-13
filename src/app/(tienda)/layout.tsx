@@ -6,7 +6,7 @@ export default function StoreLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex flex-1 flex-col">{children}</main>
+      <main className="page-enter flex flex-1 flex-col">{children}</main>
       <Footer />
       <WhatsAppButton />
     </div>

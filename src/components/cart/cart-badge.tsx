@@ -13,14 +13,20 @@ export function CartBadge({ compact = false }: { compact?: boolean }) {
       aria-label={`Carrito, ${n} productos`}
       className={
         compact
-          ? "relative flex size-11 items-center justify-center text-white no-underline"
-          : "relative flex min-w-16 flex-col items-center gap-1 px-2.5 py-1.5 text-xs text-[#E6EAF0] no-underline hover:text-white"
+          ? "group relative flex size-11 items-center justify-center text-white no-underline"
+          : "group relative flex min-w-16 flex-col items-center gap-1 px-2.5 py-1.5 text-xs text-[#d8d8de] no-underline transition-colors hover:text-white"
       }
     >
-      <ShoppingCart className={compact ? "size-6" : "size-[22px]"} strokeWidth={1.8} />
+      <ShoppingCart
+        className={`${compact ? "size-6" : "size-[22px]"} transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-brand`}
+        strokeWidth={1.8}
+      />
       {!compact && "Carrito"}
       {n > 0 && (
-        <span className="absolute top-0 right-1.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-brand px-1 text-[11px] font-bold text-ink">
+        <span
+          key={n}
+          className="absolute top-0 right-1.5 flex h-[18px] min-w-[18px] animate-scale-in items-center justify-center rounded-full bg-brand px-1 text-[11px] font-bold text-white shadow-[0_0_12px_rgba(225,6,0,0.7)]"
+        >
           {n}
         </span>
       )}

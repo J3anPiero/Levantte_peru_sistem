@@ -19,7 +19,7 @@ export default function AccountPage() {
         </form>
         <div className="flex flex-col gap-4">
           <div className="card flex flex-col gap-3 p-6">
-            <h2 className="text-lg font-bold">¿Nuevo en LEVANTE PERÚ?</h2>
+            <h2 className="text-lg font-bold">¿Nuevo en GAUDI?</h2>
             <p className="m-0 text-sm text-muted">Crea tu cuenta para acceder a:</p>
             <ul className="m-0 flex list-none flex-col gap-2.5 p-0 text-sm">
               <li className="flex items-center gap-2.5"><Package className="size-[18px] text-brand-deep" />Historial y seguimiento de pedidos</li>

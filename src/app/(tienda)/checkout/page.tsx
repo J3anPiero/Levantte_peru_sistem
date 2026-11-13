@@ -224,7 +224,7 @@ export default function CheckoutPage() {
             {form.pago === "tarjeta" && (
               <div className="flex flex-col gap-3.5 rounded-xl bg-mist p-4 sm:p-[18px]">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-[13px] text-muted">
-                  <span className="flex items-center gap-1.5"><Lock className="size-3.5" />Los datos de tarjeta se ingresan en el formulario seguro de la pasarela. Nunca se almacenan en LEVANTE PERÚ.</span>
+                  <span className="flex items-center gap-1.5"><Lock className="size-3.5" />Los datos de tarjeta se ingresan en el formulario seguro de la pasarela. Nunca se almacenan en {site.name}.</span>
                 </div>
                 <div className="rounded-[10px] border-[1.5px] border-dashed border-line-2 bg-white p-4 text-center text-[13px] text-muted">
                   Aquí se insertará el formulario de la pasarela de pago (Culqi, Niubiz o Mercado Pago) en la integración.
