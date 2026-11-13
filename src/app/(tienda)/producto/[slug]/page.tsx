@@ -161,11 +161,11 @@ export default async function ProductPage({ params }: Props) {
                           ...(product.oem ? [{ label: "Número de pieza OEM", value: product.oem }] : []),
                           ...(product.ref ? [{ label: "Referencia del fabricante", value: product.ref }] : []),
                           { label: "Marca", value: brand.name },
-                          { label: "Tipo", value: product.type === "original" ? "Original (OEM)" : "Alternativo homologado" },
+                          { label: "Tipo de repuesto", value: product.type === "original" ? "Original (OEM)" : "Alternativo homologado" },
                           ...product.specs,
                           { label: "Garantía", value: `${product.warrantyMonths} meses` },
-                        ].map((s) => (
-                          <tr key={s.label} className="border-b border-line">
+                        ].map((s, i) => (
+                          <tr key={`${s.label}-${i}`} className="border-b border-line">
                             <td className="w-[38%] py-2.5 pr-3 text-muted">{s.label}</td>
                             <td className="py-2.5 font-medium">{s.value}</td>
                           </tr>
