@@ -50,6 +50,8 @@ interface CartContextValue {
   discount: number;
   shippingEstimate: number;
   total: number;
+  /** Proporción del monto que corresponde a repuestos alternativos, de 0 a 1. Define el nivel de cashback. */
+  alternativeShare: number;
   coupon?: Coupon;
   couponError?: string;
   hydrated: boolean;
@@ -161,6 +163,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const discount = coupon ? round2(lines.reduce((s, l) => s + coupon.apply(l.product, l.lineTotal), 0)) : 0;
     const afterDiscount = subtotal - discount;
     const shippingEstimate = lines.length === 0 || afterDiscount >= site.freeShippingFrom ? 0 : site.localShippingCost;
+    const alternativeTotal = lines.filter((l) => l.product.type === "alternativo").reduce((s, l) => s + l.lineTotal, 0);
     return {
       items,
       lines,
@@ -169,6 +172,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       discount,
       shippingEstimate,
       total: round2(afterDiscount + shippingEstimate),
+      alternativeShare: subtotal > 0 ? alternativeTotal / subtotal : 0,
       coupon,
       couponError,
       hydrated,

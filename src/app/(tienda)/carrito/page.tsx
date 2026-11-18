@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Check, MessageCircle, ShieldCheck, ShoppingCart, Trash2, Truck, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Gift, MessageCircle, ShieldCheck, ShoppingCart, Trash2, Truck, X } from "lucide-react";
+import { useAuth } from "@/components/auth/auth-provider";
 import { useCart } from "@/components/cart/cart-provider";
+import { resolveCashback } from "@/lib/wallet";
 import { CheckoutSteps } from "@/components/checkout/checkout-steps";
 import { PartIllustration } from "@/components/product/part-illustration";
 import { QuantityInput } from "@/components/product/quantity-input";
@@ -16,7 +18,13 @@ const payments = ["Visa", "Mastercard", "Yape", "Plin", "Transferencia"];
 
 export default function CartPage() {
   const cart = useCart();
+  const { user } = useAuth();
   const [code, setCode] = useState("");
+  const cashback = resolveCashback({
+    amount: cart.subtotal - cart.discount,
+    alternativeShare: cart.alternativeShare,
+    customerType: user?.customerType ?? "persona",
+  });
 
   if (!cart.hydrated) {
     return <div className="container-x py-16 text-sm text-muted">Cargando tu carrito…</div>;
@@ -147,6 +155,18 @@ export default function CartPage() {
               <span className="text-[15px] font-bold">Total</span>
               <span className="font-display text-[28px] font-extrabold">{formatPrice(cart.total)}</span>
             </div>
+            {cashback.amount > 0 && (
+              <div className="flex items-start gap-2.5 rounded-xl bg-ok-soft px-3.5 py-3 text-[13px] text-ok">
+                <Gift className="mt-0.5 size-4 shrink-0" strokeWidth={2.2} />
+                <span>
+                  {user ? (
+                    <>Ganarás <strong>{formatPrice(cashback.amount)}</strong> en tu billetera con esta compra.</>
+                  ) : (
+                    <><Link href="/cuenta" className="font-semibold text-ok underline">Crea tu cuenta</Link> y recibe <strong>{formatPrice(cashback.amount)}</strong> de vuelta en saldo.</>
+                  )}
+                </span>
+              </div>
+            )}
             <Link href="/checkout" className="btn-primary h-[52px] text-[15px] font-bold">
               Proceder al pago
               <ArrowRight className="size-[18px]" strokeWidth={2.2} />

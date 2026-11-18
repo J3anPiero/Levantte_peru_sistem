@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { Heart, LayoutGrid, Search, User } from "lucide-react";
+import { Heart, LayoutGrid } from "lucide-react";
 import { topCategories, getChildren } from "@/data/categories";
 import { site } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
 import { CartBadge } from "@/components/cart/cart-badge";
+import { AccountBadge } from "@/components/auth/account-badge";
+import { SearchBar } from "@/components/search/search-bar";
 import { MobileMenu } from "./mobile-menu";
 
 const mainNav = ["frenos", "motor", "suspension", "filtros", "electrico", "iluminacion"];
@@ -40,26 +42,10 @@ export function Header() {
           <CartBadge compact />
         </div>
 
-        <form action="/catalogo" method="get" role="search" className="group order-last flex h-12 basis-full overflow-hidden rounded-xl bg-white ring-brand/0 transition-all duration-300 focus-within:ring-2 focus-within:ring-brand md:order-none md:flex-1 md:basis-[420px]">
-          <label htmlFor="header-q" className="sr-only">Buscar repuesto</label>
-          <input
-            id="header-q"
-            name="q"
-            type="search"
-            placeholder="Busca por nombre, código o número de pieza"
-            className="min-w-0 flex-1 border-0 px-4 text-sm text-ink placeholder:text-muted focus:outline-none"
-          />
-          <button type="submit" className="flex cursor-pointer items-center gap-2 bg-brand px-4 text-sm font-bold text-white transition-colors duration-300 hover:bg-brand-deep md:px-5">
-            <Search className="size-[18px] transition-transform duration-300 group-focus-within:scale-110" strokeWidth={2.2} />
-            <span className="hidden sm:inline">Buscar</span>
-          </button>
-        </form>
+        <SearchBar className="order-last basis-full md:order-none md:flex-1 md:basis-[420px]" />
 
         <div className="hidden items-center gap-1.5 md:flex">
-          <Link href="/cuenta" className="group flex min-w-16 flex-col items-center gap-1 px-2.5 py-1.5 text-xs text-[#d8d8de] no-underline transition-colors hover:text-white">
-            <User className="size-[22px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-brand" strokeWidth={1.8} />
-            Mi cuenta
-          </Link>
+          <AccountBadge />
           <Link href="/cuenta" className="group flex min-w-16 flex-col items-center gap-1 px-2.5 py-1.5 text-xs text-[#d8d8de] no-underline transition-colors hover:text-white">
             <Heart className="size-[22px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-brand" strokeWidth={1.8} />
             Favoritos

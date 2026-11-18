@@ -12,6 +12,10 @@ export interface PlacedOrder extends Order {
   estimatedDelivery: string;
   paymentLast4?: string;
   invoiceNumber: string;
+  /** Saldo de la billetera aplicado a este pedido. */
+  walletUsed?: number;
+  /** Cashback acreditado, con el nivel que lo originó. */
+  cashback?: { amount: number; tierLabel: string; rate: number };
 }
 
 const KEY = "gaudi-orders-v1";

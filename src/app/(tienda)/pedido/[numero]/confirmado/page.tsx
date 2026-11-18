@@ -3,7 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { Check, Download, MessageCircle } from "lucide-react";
+import { Check, Download, Gift, MessageCircle } from "lucide-react";
 import { CheckoutSteps } from "@/components/checkout/checkout-steps";
 import { PartIllustration } from "@/components/product/part-illustration";
 import { getProduct } from "@/lib/catalog";
@@ -117,8 +117,22 @@ export default function OrderConfirmedPage({ params }: { params: Promise<{ numer
             <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatPrice(order.subtotal)}</span></div>
             {order.discount > 0 && <div className="flex justify-between"><span className="text-muted">Descuento</span><span className="text-ok">− {formatPrice(order.discount)}</span></div>}
             <div className="flex justify-between"><span className="text-muted">Envío</span><span className={order.shipping === 0 ? "text-ok" : ""}>{order.shipping === 0 ? "Gratis" : formatPrice(order.shipping)}</span></div>
+            {order.walletUsed ? (
+              <div className="flex justify-between"><span className="text-muted">Saldo de billetera</span><span className="text-ok">− {formatPrice(order.walletUsed)}</span></div>
+            ) : null}
           </div>
           <div className="flex items-baseline justify-between border-t border-line pt-3"><span className="text-[15px] font-bold">{pending ? "Total a pagar" : "Total pagado"}</span><span className="font-display text-[26px] font-extrabold">{formatPrice(order.total)}</span></div>
+          {order.cashback && (
+            <div className="flex items-start gap-2.5 rounded-xl bg-ok-soft p-3.5 text-[13px] leading-relaxed text-ok">
+              <Gift className="mt-0.5 size-4 shrink-0" strokeWidth={2.2} />
+              <span>
+                <strong>Abonamos {formatPrice(order.cashback.amount)} a tu billetera</strong> por esta compra, nivel{" "}
+                {order.cashback.tierLabel}. Úsalo como descuento en tu próximo pedido.
+                <br />
+                <Link href="/cuenta" className="font-semibold text-ok underline">Ver mi billetera</Link>
+              </span>
+            </div>
+          )}
           <div className="rounded-xl bg-brand-soft p-3.5 text-[13px] leading-relaxed"><strong>Garantía registrada.</strong> Guarda tu comprobante: es el documento para cualquier reclamo de garantía dentro de los próximos 12 meses.</div>
         </aside>
       </div>

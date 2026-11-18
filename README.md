@@ -87,6 +87,35 @@ public/marca/            Archivos del logotipo
 - El pago con tarjeta muestra el espacio para el formulario de la pasarela (Culqi, Niubiz o Mercado Pago).
   Nunca se capturan datos de tarjeta en este frontend.
 
+## Búsqueda por voz
+
+El buscador de la cabecera (`src/components/search/search-bar.tsx`) usa la Web Speech API con
+`lang = "es-PE"`. El botón del micrófono solo aparece si el navegador la soporta, que hoy son los
+basados en Chromium y Safari; en Firefox el buscador funciona igual pero sin micrófono. Mientras
+escucha muestra el texto provisional y, al cerrar la frase, navega a `/catalogo?q=…`. Los errores de
+permiso, de micrófono ausente y de red se traducen a un mensaje en español. El dictado necesita
+conexión segura: funciona en `localhost` y en HTTPS, no en HTTP de red.
+
+## Cuentas y billetera con cashback
+
+`src/lib/wallet.ts` define los tres niveles del programa, con su porcentaje y su tope por pedido:
+
+| Nivel | Cashback | Tope | Cuándo aplica |
+|---|---|---|---|
+| Compra regular | 2.5% | S/ 20 | Compras regulares y repuestos originales |
+| Compra mayor | 5% | S/ 40 | Pedido sobre S/ 500, o mayoría de repuestos alternativos |
+| Taller o mecánico | 7% | S/ 80 | Cuentas registradas como taller |
+
+Dos reglas de negocio quedaron fijadas en el código y conviene revisarlas: el saldo se aplica
+primero a los repuestos y después al envío, y el cashback se calcula sobre el dinero realmente
+pagado, descontando el saldo usado, para que la billetera no se retroalimente.
+
+**Esto es una capa de demostración.** Las cuentas viven en `localStorage` del navegador. Las
+contraseñas se derivan con PBKDF2 (150 mil iteraciones, SHA-256, sal por usuario) y nunca se guardan
+en claro, pero cualquiera con las herramientas de desarrollo puede leer o editar el saldo. No es
+seguridad real. Al conectar la API, `src/components/auth/auth-provider.tsx` debe pasar a llamar al
+backend y el saldo debe calcularse y validarse en el servidor.
+
 ## Cupones de prueba
 
 `FRENOS20` (20 % en frenos) y `BIENVENIDO10` (10 % general), definidos en `cart-provider.tsx`.

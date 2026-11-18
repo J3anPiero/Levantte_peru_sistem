@@ -4,8 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { ArrowLeft, Building2, CreditCard, Landmark, Lock, MessageCircle, Smartphone, Store, Truck, Wallet } from "lucide-react";
+import { ArrowLeft, Building2, CreditCard, Gift, Landmark, Lock, MessageCircle, Smartphone, Store, Truck, Wallet } from "lucide-react";
+import { useAuth } from "@/components/auth/auth-provider";
 import { useCart } from "@/components/cart/cart-provider";
+import { formatRate, maxWalletUse, resolveCashback } from "@/lib/wallet";
 import { CheckoutSteps } from "@/components/checkout/checkout-steps";
 import { PartIllustration } from "@/components/product/part-illustration";
 import { formatPrice, igvIncluded, round2 } from "@/lib/format";
@@ -69,7 +71,9 @@ function Section({ n, title, children, action }: { n: number; title: string; chi
 
 export default function CheckoutPage() {
   const cart = useCart();
+  const { user, addTransaction } = useAuth();
   const router = useRouter();
+  const [useWallet, setUseWallet] = useState(true);
   const [form, setForm] = useState({
     nombres: "", apellidos: "", tipoDoc: "DNI", numDoc: "", telefono: "", email: "", crearCuenta: false,
     comprobante: "boleta" as "boleta" | "factura", ruc: "", razonSocial: "", direccionFiscal: "",
@@ -84,7 +88,20 @@ export default function CheckoutPage() {
   const shipping = shippingOptions.find((s) => s.id === form.envio)!;
   const afterDiscount = cart.subtotal - cart.discount;
   const shippingCost = form.envio === "local" && afterDiscount >= site.freeShippingFrom ? 0 : shipping.cost;
-  const total = round2(afterDiscount + shippingCost);
+  const payable = round2(afterDiscount + shippingCost);
+
+  // El saldo se aplica primero a los repuestos y recién después al envío.
+  const walletAvailable = user ? maxWalletUse(user.wallet.balance, payable) : 0;
+  const walletUsed = useWallet ? walletAvailable : 0;
+  const total = round2(payable - walletUsed);
+
+  // El cashback se calcula sobre el dinero realmente pagado por los repuestos,
+  // no sobre el saldo reutilizado, para que la billetera no se retroalimente.
+  const cashback = resolveCashback({
+    amount: Math.max(0, afterDiscount - walletUsed),
+    alternativeShare: cart.alternativeShare,
+    customerType: user?.customerType ?? "persona",
+  });
 
   if (!cart.hydrated) return <div className="container-x py-16 text-sm text-muted">Cargando…</div>;
   if (cart.lines.length === 0) {
@@ -143,7 +160,19 @@ export default function CheckoutPage() {
       shippingMethod: shipping.title,
       shippingAddress: form.envio === "tienda" ? site.address : `${form.direccion}, ${form.distrito}, ${form.departamento}${form.referencia ? ` · Ref. ${form.referencia}` : ""}`,
       estimatedDelivery: shipping.eta,
+      walletUsed,
+      cashback: user && cashback.amount > 0 ? { amount: cashback.amount, tierLabel: cashback.tier.label, rate: cashback.tier.rate } : undefined,
     });
+
+    if (user) {
+      if (walletUsed > 0) {
+        addTransaction({ type: "pago", amount: -walletUsed, note: "Saldo usado en tu compra", orderNumber: number });
+      }
+      if (cashback.amount > 0) {
+        addTransaction({ type: "cashback", amount: cashback.amount, note: `Cashback ${cashback.tier.label}`, orderNumber: number });
+      }
+    }
+
     cart.clear();
     router.push(`/pedido/${number}/confirmado`);
   }
@@ -278,9 +307,44 @@ export default function CheckoutPage() {
               <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatPrice(cart.subtotal)}</span></div>
               {cart.coupon && <div className="flex justify-between"><span className="text-muted">Cupón {cart.coupon.code}</span><span className="text-ok">− {formatPrice(cart.discount)}</span></div>}
               <div className="flex justify-between"><span className="text-muted">{shipping.title.split(" ").slice(0, 3).join(" ")}</span><span className={shippingCost === 0 ? "text-ok" : ""}>{shippingCost === 0 ? "Gratis" : formatPrice(shippingCost)}</span></div>
+              {walletUsed > 0 && (
+                <div className="flex justify-between"><span className="text-muted">Saldo de tu billetera</span><span className="text-ok">− {formatPrice(walletUsed)}</span></div>
+              )}
               <div className="flex justify-between text-xs text-muted"><span>Incluye IGV (18%)</span><span>{formatPrice(igvIncluded(total))}</span></div>
             </div>
             <div className="flex items-baseline justify-between border-t border-line pt-3"><span className="text-[15px] font-bold">Total a pagar</span><span className="font-display text-[28px] font-extrabold">{formatPrice(total)}</span></div>
+
+            {user ? (
+              <>
+                {walletAvailable > 0 && (
+                  <label className={clsx("flex cursor-pointer items-start gap-3 rounded-xl border-[1.5px] px-4 py-3.5 transition-colors", useWallet ? "border-brand-deep bg-[#fff7f2]" : "border-line-2 bg-white")}>
+                    <input type="checkbox" checked={useWallet} onChange={(e) => setUseWallet(e.target.checked)} className="mt-0.5 size-5 accent-brand-deep" />
+                    <span className="flex flex-col gap-0.5">
+                      <strong className="flex items-center gap-1.5 text-sm"><Wallet className="size-4 text-brand" strokeWidth={2.2} />Usar mi saldo ({formatPrice(walletAvailable)})</strong>
+                      <span className="text-xs text-muted">Tienes {formatPrice(user.wallet.balance)} disponibles en tu billetera.</span>
+                    </span>
+                  </label>
+                )}
+                {cashback.amount > 0 && (
+                  <div className="flex items-start gap-2.5 rounded-xl bg-ok-soft px-3.5 py-3 text-[13px] text-ok">
+                    <Gift className="mt-0.5 size-4 shrink-0" strokeWidth={2.2} />
+                    <span>
+                      Ganarás <strong>{formatPrice(cashback.amount)}</strong> en tu billetera con esta compra.
+                      <br />
+                      <span className="text-muted">{cashback.reason} Nivel {cashback.tier.label}, {formatRate(cashback.tier.rate)}{cashback.capped ? `, con tope de ${formatPrice(cashback.tier.cap)}` : ""}.</span>
+                    </span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex items-start gap-2.5 rounded-xl bg-brand-soft px-3.5 py-3 text-[13px]">
+                <Gift className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={2.2} />
+                <span>
+                  <Link href="/cuenta" className="font-semibold">Crea tu cuenta</Link> y esta compra te devolvería{" "}
+                  <strong>{formatPrice(resolveCashback({ amount: afterDiscount, alternativeShare: cart.alternativeShare, customerType: "persona" }).amount)}</strong> en saldo para tu próximo pedido.
+                </span>
+              </div>
+            )}
             <button type="submit" disabled={submitting} className="btn-primary h-[54px] text-[15px] font-bold">
               <Lock className="size-[18px]" strokeWidth={2.2} />
               {submitting ? "Procesando…" : `Confirmar y pagar ${formatPrice(total)}`}
