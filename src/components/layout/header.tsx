@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Heart, LayoutGrid } from "lucide-react";
+import { Heart, LayoutGrid, ScanLine } from "lucide-react";
 import { topCategories, getChildren } from "@/data/categories";
 import { site } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
@@ -85,7 +85,11 @@ export function Header() {
               {c.name.split(" ")[0]}
             </Link>
           ))}
-          <Link href="/catalogo?orden=nuevos" className="nav-link font-semibold text-brand hover:text-brand-light">Ofertas</Link>
+          <Link href="/placa" className="nav-link inline-flex items-center gap-1.5 font-semibold text-brand hover:text-brand-light">
+            <ScanLine className="size-4" strokeWidth={2.2} />
+            Buscar por placa
+          </Link>
+          <Link href="/catalogo?orden=nuevos" className="nav-link">Ofertas</Link>
           <span className="flex-1" />
           <Link href="/marcas" className="nav-link">Marcas</Link>
           <Link href="/nosotros" className="nav-link">Nosotros</Link>

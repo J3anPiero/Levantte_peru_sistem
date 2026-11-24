@@ -7,6 +7,7 @@ import type { Category } from "@/lib/types";
 import { Logo } from "@/components/ui/logo";
 
 const corporate = [
+  { href: "/placa", label: "Buscar por placa" },
   { href: "/marcas", label: "Marcas" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/garantias-y-devoluciones", label: "Garantías y devoluciones" },

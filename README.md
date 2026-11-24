@@ -96,6 +96,28 @@ escucha muestra el texto provisional y, al cerrar la frase, navega a `/catalogo?
 permiso, de micrófono ausente y de red se traducen a un mensaje en español. El dictado necesita
 conexión segura: funciona en `localhost` y en HTTPS, no en HTTP de red.
 
+## Buscador por placa y desguace
+
+En `/placa` se escribe la placa, se obtiene el VIN, se despieza el vehículo por sistemas y se listan
+las piezas del catálogo que le corresponden, marcando cuáles tienen stock.
+
+- `src/lib/plate.ts` valida los formatos peruanos (ABC-123 y A1B-234) y arma el VIN. El dígito
+  verificador se calcula con el algoritmo ISO 3779, así que los VIN generados pasan la validación del
+  estándar en lugar de ser cadenas al azar.
+- `src/data/plates.ts` es el padrón **sintético**: ocho vehículos elegidos para cubrir los modelos con
+  piezas en el catálogo, más un Chevrolet Sail sin repuestos específicos para ver el comportamiento
+  cuando solo hay piezas universales. `lookupPlate` es el único punto a reemplazar cuando exista el
+  servicio real; ya simula la latencia de una API para que la interfaz muestre su estado de carga.
+- `src/lib/teardown.ts` define las siete zonas del despiece y las cruza con el catálogo. Una pieza sin
+  compatibilidades declaradas (líquido de frenos, por ejemplo) se marca como universal en vez de
+  descartarse.
+- `src/components/plate/car-diagram.tsx` dibuja el vehículo de perfil. Los puntos son botones HTML
+  sobre el SVG, no elementos del dibujo, para que funcionen con teclado y lector de pantalla.
+
+**Ninguna placa ni VIN corresponde a un vehículo real.** En producción la consulta debe resolverse
+contra el servicio oficial (en Perú, SUNARP o el MTC): son datos personales de terceros y su
+tratamiento exige convenio y base legal, además de registrar el consentimiento de quien consulta.
+
 ## Cuentas y billetera con cashback
 
 `src/lib/wallet.ts` define los tres niveles del programa, con su porcentaje y su tope por pedido:
