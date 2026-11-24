@@ -171,17 +171,18 @@
     @apply inline-flex items-center gap-2 rounded-full border border-line-2 bg-white px-3 py-1.5 text-[13px] font-medium transition-colors duration-200;
   }
 
-  /* Enlace de navegación con subrayado rojo que entra desde la izquierda */
+  /* Enlace de navegación: pastilla al pasar el cursor y subrayado rojo que entra desde la izquierda */
   .nav-link {
-    @apply relative inline-block px-3.5 py-3.5 text-sm font-medium text-[#d8d8de] no-underline transition-colors duration-200 hover:text-white;
+    @apply relative inline-flex shrink-0 items-center gap-1.5 rounded-[9px] px-3.5 py-2 text-sm font-medium whitespace-nowrap text-[#c9c9d2] no-underline transition-colors duration-300 hover:bg-white/8 hover:text-white;
   }
   .nav-link::after {
     content: "";
     position: absolute;
     left: 14px;
     right: 14px;
-    bottom: 8px;
+    bottom: 3px;
     height: 2px;
+    border-radius: 2px;
     background: var(--color-brand);
     transform: scaleX(0);
     transform-origin: left;
@@ -190,6 +191,29 @@
   .nav-link:hover::after,
   .nav-link[data-active="true"]::after {
     transform: scaleX(1);
+  }
+
+  /* Enlace destacado de la barra: borde rojo y relleno al pasar el cursor */
+  .nav-featured {
+    @apply relative inline-flex shrink-0 items-center gap-2 rounded-[9px] border border-brand/60 px-3.5 py-2 text-sm font-semibold whitespace-nowrap text-brand no-underline transition-all duration-300 hover:border-brand hover:bg-brand hover:text-white hover:shadow-red;
+  }
+
+  /* Enlace de la barra superior de servicio */
+  .util-link {
+    @apply whitespace-nowrap text-muted-2 no-underline transition-colors duration-200 hover:text-brand;
+  }
+
+  /* Fila que se desplaza en horizontal sin barra de scroll. El degradado del
+     borde derecho avisa de que hay más contenido; cuando todo entra, cae sobre
+     espacio vacío y no se nota. */
+  .scroll-row {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 32px), transparent 100%);
+  }
+  .scroll-row::-webkit-scrollbar {
+    display: none;
   }
 
   /* Tarjeta de producto premium */
