@@ -96,6 +96,36 @@ escucha muestra el texto provisional y, al cerrar la frase, navega a `/catalogo?
 permiso, de micrófono ausente y de red se traducen a un mensaje en español. El dictado necesita
 conexión segura: funciona en `localhost` y en HTTPS, no en HTTP de red.
 
+## Base automotriz (car-api)
+
+El catálogo se apoya en la base del paquete **auto-parts-db** ([lifeofcapo/car-api](https://github.com/lifeofcapo/car-api),
+licencia MIT), con los nombres de pieza ya traducidos al español. Pese al nombre, no es una API: es
+un paquete de datos estáticos en JSON, sin servidor, endpoints ni base de datos.
+
+Los JSON originales viven en `data-source/` y **no los importa la aplicación**. De ahí sale, con
+`node scripts/generar-datos-vehiculos.mjs`, lo que sí se versiona y se usa:
+
+| Generado | Contenido |
+|---|---|
+| `src/data/vehicles.ts` | 142 marcas y 2 387 modelos con su rango de años |
+| `src/data/part-types.ts` | 1 521 tipos de pieza (nombre en español, slug en inglés) |
+
+Tres decisiones que conviene conocer:
+
+- **La base es europea y le faltan modelos que sí vendemos.** El script añade ocho del mercado
+  peruano (Versa, Frontier, Sail, Onix, D-Max, Gol, Mazda 2 y Mazda 3); sin ellos, los repuestos que
+  los declaran compatibles quedarían huérfanos y el buscador por placa no hallaría el vehículo.
+- **La nomenclatura no es stock.** Tener el nombre de una pieza no significa tenerla en almacén.
+  Solo los productos de `src/data/products.ts` tienen precio y stock; se enlazan a la nomenclatura
+  con el campo `partType`. De 21 productos, 19 tienen equivalente exacto: la batería de 12 V y el kit
+  de accesorios de pastillas no lo tienen (la base solo trae batería de alto voltaje).
+- **`part-types.ts` pesa 110 KB y solo se usa desde el servidor** (`src/lib/parts-index.ts`), así que
+  no viaja al navegador. `vehicles.ts` sí llega al cliente porque el selector lo necesita al instante.
+
+La página `/piezas` recorre la nomenclatura con buscador, índice alfabético y paginación, marcando lo
+que hay en stock. Cada tipo con stock enlaza a `/catalogo?pieza=<slug>`; el parámetro se llama `pieza`
+y no `tipo` porque ese último ya lo ocupa el filtro de original contra alternativo.
+
 ## Buscador por placa y desguace
 
 En `/placa` se escribe la placa, se obtiene el VIN, se despieza el vehículo por sistemas y se listan

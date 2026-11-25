@@ -52,6 +52,11 @@ export interface Spec {
 export interface Product {
   id: string;
   sku: string;
+  /**
+   * Slug del tipo de pieza en la nomenclatura (src/data/part-types.ts).
+   * Queda sin definir cuando la nomenclatura no tiene un equivalente exacto.
+   */
+  partType?: string;
   oem?: string;
   ref?: string;
   slug: string;

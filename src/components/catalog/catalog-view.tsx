@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Car, LayoutGrid, List, SearchX, X } from "lucide-react";
 import { getCategory, getChildren, topCategories } from "@/data/categories";
 import { categoryPath, facets, searchProducts } from "@/lib/catalog";
+import { partTypeBySlug } from "@/lib/parts-index";
 import { buildQuery, parseCatalogParams, withoutValue, type SearchParams } from "@/lib/catalog-params";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { ProductCard } from "@/components/product/product-card";
@@ -55,6 +56,7 @@ export function CatalogView({ sp, categorySlug }: Props) {
   for (const d of query.availability ?? []) chips.push({ label: d === "en-stock" ? "En stock" : "Bajo pedido", href: basePath + withoutValue(sp, "disp", d) });
   for (const t of query.type ?? []) chips.push({ label: t === "original" ? "Original (OEM)" : "Alternativo", href: basePath + withoutValue(sp, "tipo", t) });
   for (const p of query.position ?? []) chips.push({ label: p === "delantero" ? "Eje delantero" : "Eje posterior", href: basePath + withoutValue(sp, "pos", p) });
+  if (query.partType) chips.push({ label: partTypeBySlug(query.partType)?.name ?? query.partType, href: basePath + buildQuery(sp, { pieza: null, pagina: null }) });
   if (query.q) chips.push({ label: `“${query.q}”`, href: basePath + buildQuery(sp, { q: null, pagina: null }) });
 
   const pageHref = (n: number) => basePath + buildQuery(sp, { pagina: n === 1 ? null : String(n) });

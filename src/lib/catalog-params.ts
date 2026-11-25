@@ -29,6 +29,9 @@ export function parseCatalogParams(sp: SearchParams, category?: string): Catalog
     availability: list(sp.disp) as CatalogQuery["availability"],
     type: list(sp.tipo) as CatalogQuery["type"],
     position: list(sp.pos) as CatalogQuery["position"],
+    // "tipo" ya lo ocupa el filtro original/alternativo, así que el tipo de
+    // pieza de la nomenclatura viaja como "pieza".
+    partType: one(sp.pieza),
     q: one(sp.q),
     sort: sortOptions.some((o) => o.value === sort) ? sort : "popular",
     page: num(sp.pagina) ?? 1,

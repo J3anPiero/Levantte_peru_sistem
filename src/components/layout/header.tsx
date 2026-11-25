@@ -106,6 +106,13 @@ export function Header() {
                     </div>
                   </div>
                 ))}
+                <Link
+                  href="/piezas"
+                  className="col-span-2 mt-2 flex items-center justify-between rounded-xl bg-mist px-4 py-3 text-sm font-semibold text-ink no-underline transition-colors hover:bg-brand-soft hover:text-brand"
+                >
+                  Ver la nomenclatura completa de piezas
+                  <span aria-hidden="true">→</span>
+                </Link>
               </div>
             </div>
           </div>
@@ -117,6 +124,7 @@ export function Header() {
                 {c.name.split(" y ")[0]}
               </Link>
             ))}
+            <Link href="/piezas" className="nav-link">Piezas A-Z</Link>
             <Link href="/catalogo?orden=nuevos" className="nav-link">
               Ofertas
               <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />

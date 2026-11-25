@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Award, CreditCard, Headset, ShieldCheck, Star, Truck } from "lucide-react";
 import { topCategories } from "@/data/categories";
-import { vehicleMakes } from "@/data/brands";
+import { featuredMakes } from "@/data/brands";
 import { bestSellers, featuredProducts } from "@/lib/catalog";
 import { site } from "@/lib/site";
 import { PartIllustration } from "@/components/product/part-illustration";
@@ -198,12 +198,12 @@ export default function HomePage() {
         </div>
         <div className="marquee-mask overflow-hidden">
           <div className="marquee-track flex gap-3">
-            {[...vehicleMakes, ...vehicleMakes].map((m, i) => (
+            {[...featuredMakes, ...featuredMakes].map((m, i) => (
               <Link
                 key={`${m}-${i}`}
                 href={`/catalogo?vmarca=${encodeURIComponent(m)}`}
-                aria-hidden={i >= vehicleMakes.length}
-                tabIndex={i >= vehicleMakes.length ? -1 : undefined}
+                aria-hidden={i >= featuredMakes.length}
+                tabIndex={i >= featuredMakes.length ? -1 : undefined}
                 className="card flex h-[76px] w-[168px] shrink-0 items-center justify-center font-display text-[13px] font-bold tracking-[0.06em] text-muted no-underline uppercase transition-all duration-300 hover:border-brand hover:text-brand hover:shadow-card"
               >
                 {m}

@@ -6,6 +6,7 @@ export const products: Product[] = [
   {
     id: "p-04512",
     sku: "LP-FR-04512",
+    partType: "brake-pad-set-front",
     oem: "04465-0K240",
     slug: "pastillas-freno-delanteras-ceramicas-toyota-hilux",
     name: "Pastillas de freno delanteras cerámicas para Toyota Hilux y Fortuner",
@@ -43,6 +44,7 @@ export const products: Product[] = [
   {
     id: "p-04520",
     sku: "LP-FR-04520",
+    partType: "brake-pad-set-front",
     ref: "0 986 AB1 234",
     slug: "pastillas-freno-delanteras-semimetalicas-bosch-bp1234",
     name: "Pastillas de freno delanteras semimetálicas BP1234",
@@ -69,6 +71,7 @@ export const products: Product[] = [
   {
     id: "p-04533",
     sku: "LP-FR-04533",
+    partType: "brake-pad-set-rear",
     ref: "P83024",
     slug: "pastillas-freno-posteriores-brembo-p83024",
     name: "Pastillas de freno posteriores P 83 024",
@@ -92,6 +95,7 @@ export const products: Product[] = [
   {
     id: "p-04541",
     sku: "LP-FR-04541",
+    partType: "brake-pad-set-front",
     ref: "GDB3426",
     slug: "pastillas-freno-delanteras-trw-gdb3426",
     name: "Pastillas de freno delanteras GDB3426",
@@ -114,6 +118,7 @@ export const products: Product[] = [
   {
     id: "p-04558",
     sku: "LP-FR-04558",
+    partType: "brake-pad-set-front",
     ref: "ACT1344",
     slug: "pastillas-freno-delanteras-akebono-proact",
     name: "Pastillas de freno delanteras ProACT cerámicas",
@@ -136,6 +141,7 @@ export const products: Product[] = [
   {
     id: "p-04566",
     sku: "LP-FR-04566",
+    partType: "brake-pad-set-rear",
     ref: "FDB1890",
     slug: "pastillas-freno-posteriores-ferodo-premier-fdb1890",
     name: "Pastillas de freno posteriores Premier FDB1890",
@@ -159,6 +165,7 @@ export const products: Product[] = [
   {
     id: "p-04580",
     sku: "LP-FR-04580",
+    partType: "brake-pad-set-rear",
     oem: "04466-0K120",
     slug: "pastillas-freno-posteriores-originales-toyota-hilux",
     name: "Pastillas de freno posteriores originales Toyota",
@@ -181,6 +188,7 @@ export const products: Product[] = [
   {
     id: "p-04592",
     sku: "LP-FR-04592",
+    partType: "brake-pad-set-front",
     ref: "P83087",
     slug: "pastillas-freno-delanteras-brembo-p83087",
     name: "Pastillas de freno delanteras P 83 087",
@@ -203,6 +211,7 @@ export const products: Product[] = [
   {
     id: "p-02230",
     sku: "LP-FR-02230",
+    partType: "front-brake-disc",
     ref: "09.A417.11",
     slug: "disco-freno-ventilado-delantero-brembo-296",
     name: "Disco de freno ventilado delantero 296 mm",
@@ -231,6 +240,7 @@ export const products: Product[] = [
   {
     id: "p-09001",
     sku: "LP-FR-09001",
+    partType: "brake-fluid",
     slug: "liquido-de-frenos-bosch-dot4-500ml",
     name: "Líquido de frenos DOT 4 · 500 ml",
     description: "Líquido de frenos sintético DOT 4 con alto punto de ebullición, apto para sistemas ABS y ESP.",
@@ -251,6 +261,7 @@ export const products: Product[] = [
   {
     id: "p-07712",
     sku: "LP-FR-07712",
+    partType: "brake-pad-wear-sensor",
     oem: "47770-0K010",
     slug: "sensor-desgaste-pastillas-delantero-toyota",
     name: "Sensor de desgaste de pastillas delantero",
@@ -291,6 +302,7 @@ export const products: Product[] = [
   {
     id: "p-00218",
     sku: "LP-FL-00218",
+    partType: "oil-filter",
     oem: "90915-YZZE1",
     ref: "W 68/3",
     slug: "filtro-aceite-mann-w68-3",
@@ -320,6 +332,7 @@ export const products: Product[] = [
   {
     id: "p-00230",
     sku: "LP-FL-00230",
+    partType: "air-filter",
     ref: "C 26 017",
     slug: "filtro-aire-mann-c26017",
     name: "Filtro de aire C 26 017",
@@ -341,6 +354,7 @@ export const products: Product[] = [
   {
     id: "p-00412",
     sku: "LP-EN-00412",
+    partType: "spark-plug-set",
     ref: "4912",
     slug: "bujia-iridio-ngk-ilkar7b11-x4",
     name: "Bujía de iridio ILKAR7B11 (juego de 4)",
@@ -367,6 +381,7 @@ export const products: Product[] = [
   {
     id: "p-01540",
     sku: "LP-EN-01540",
+    partType: "timing-belt-kit",
     ref: "K015603XS",
     slug: "kit-distribucion-gates-k015603xs",
     name: "Kit de distribución con tensor",
@@ -393,6 +408,7 @@ export const products: Product[] = [
   {
     id: "p-01190",
     sku: "LP-SU-01190",
+    partType: "front-shock-absorber",
     ref: "339031",
     slug: "amortiguador-delantero-kyb-excel-g-339031",
     name: "Amortiguador delantero Excel-G",
@@ -442,6 +458,7 @@ export const products: Product[] = [
   {
     id: "p-00903",
     sku: "LP-IL-00903",
+    partType: "right-headlight",
     ref: "212-11Q9R",
     slug: "faro-delantero-derecho-halogeno-depo-yaris",
     name: "Faro delantero derecho halógeno",
@@ -464,6 +481,7 @@ export const products: Product[] = [
   {
     id: "p-02110",
     sku: "LP-TR-02110",
+    partType: "clutch-kit",
     ref: "TYK2089",
     slug: "kit-embrague-exedy-tyk2089",
     name: "Kit de embrague Exedy (disco, plato y collarín)",
@@ -485,6 +503,7 @@ export const products: Product[] = [
   {
     id: "p-05501",
     sku: "LP-CA-05501",
+    partType: "right-side-mirror",
     oem: "87910-0K720",
     slug: "espejo-retrovisor-derecho-electrico-hilux",
     name: "Espejo retrovisor derecho eléctrico con luz direccional",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import { ScanLine } from "lucide-react";
-import { vehicleMakes, vehicleModels, vehicleYears } from "@/data/brands";
+import { modelsFor, vehicleMakes, yearsFor } from "@/data/brands";
 import { formatPlate, isValidPlate } from "@/lib/plate";
 
 interface Props {
@@ -21,7 +21,10 @@ export function VehicleSelector({ variant = "bar", initial, categorySlug }: Prop
   const [year, setYear] = useState(initial?.year ? String(initial.year) : "");
   const [plate, setPlate] = useState("");
   const [plateError, setPlateError] = useState("");
-  const models = make ? vehicleModels[make] ?? [] : [];
+  const models = make ? modelsFor(make) : [];
+  // Los años dependen del modelo: no tiene sentido ofrecer un 2005 para un
+  // modelo que se dejó de fabricar en 1998.
+  const years = yearsFor(make, model);
   const panel = variant === "panel";
 
   function submitVehicle(e: React.FormEvent) {
@@ -147,10 +150,19 @@ export function VehicleSelector({ variant = "bar", initial, categorySlug }: Prop
           <label htmlFor={`vs-model-${variant}`} className={labelCls}>
             Modelo
           </label>
-          <select id={`vs-model-${variant}`} className={selectCls} value={model} onChange={(e) => setModel(e.target.value)} disabled={!make}>
-            <option value="">Modelo</option>
+          <select
+            id={`vs-model-${variant}`}
+            className={selectCls}
+            value={model}
+            onChange={(e) => {
+              setModel(e.target.value);
+              setYear("");
+            }}
+            disabled={!make}
+          >
+            <option value="">{make ? `Modelo (${models.length})` : "Modelo"}</option>
             {models.map((m) => (
-              <option key={m}>{m}</option>
+              <option key={m.name}>{m.name}</option>
             ))}
           </select>
         </div>
@@ -160,7 +172,7 @@ export function VehicleSelector({ variant = "bar", initial, categorySlug }: Prop
           </label>
           <select id={`vs-year-${variant}`} className={selectCls} value={year} onChange={(e) => setYear(e.target.value)}>
             <option value="">Año</option>
-            {vehicleYears.map((y) => (
+            {years.map((y) => (
               <option key={y}>{y}</option>
             ))}
           </select>

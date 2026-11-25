@@ -1,5 +1,7 @@
 import type { Brand } from "@/lib/types";
+import { vehicleBrands, type VehicleModel } from "./vehicles";
 
+/** Marcas de los repuestos que vendemos, distintas de las marcas de vehículos. */
 export const brands: Brand[] = [
   { id: "toyota-genuine", slug: "toyota-genuine", name: "Toyota Genuine", type: "original" },
   { id: "hyundai-mobis", slug: "hyundai-mobis", name: "Hyundai Mobis", type: "original" },
@@ -21,8 +23,16 @@ export function getBrand(slugOrId: string) {
   return brands.find((b) => b.slug === slugOrId || b.id === slugOrId);
 }
 
-/** Vehicle makes the store carries parts for (shown as wordmarks). */
-export const vehicleMakes = [
+/* ------------------------------------------------------------- vehículos */
+
+/** Las 142 marcas de vehículos de la base, en orden alfabético. */
+export const vehicleMakes = vehicleBrands.map((b) => b.brand);
+
+/**
+ * Marcas con más presencia en el parque automotor peruano. Se usan donde
+ * mostrar las 142 sería ruido, como el carrusel del inicio.
+ */
+export const featuredMakes = [
   "Toyota",
   "Hyundai",
   "Kia",
@@ -35,17 +45,31 @@ export const vehicleMakes = [
   "Volkswagen",
 ];
 
-export const vehicleModels: Record<string, string[]> = {
-  Toyota: ["Hilux", "Fortuner", "Corolla", "Yaris", "RAV4", "Innova"],
-  Hyundai: ["Tucson", "Elantra", "Accent", "Santa Fe", "Creta"],
-  Kia: ["Sportage", "Rio", "Cerato", "Sorento", "Picanto"],
-  Nissan: ["Sentra", "Versa", "Frontier", "X-Trail", "Kicks"],
-  Chevrolet: ["Sail", "Spark", "Onix", "Tracker", "D-Max"],
-  Suzuki: ["Swift", "Vitara", "Alto", "Baleno", "Jimny"],
-  Mitsubishi: ["L200", "Montero", "ASX", "Outlander"],
-  Honda: ["Civic", "CR-V", "HR-V", "Fit"],
-  Mazda: ["Mazda 3", "CX-5", "Mazda 2", "BT-50"],
-  Volkswagen: ["Gol", "Polo", "Amarok", "Tiguan"],
-};
+export function modelsFor(make: string): VehicleModel[] {
+  return vehicleBrands.find((b) => b.brand.toLowerCase() === make.toLowerCase())?.models ?? [];
+}
 
-export const vehicleYears = Array.from({ length: 22 }, (_, i) => 2026 - i);
+export function findModel(make: string, model: string): VehicleModel | undefined {
+  return modelsFor(make).find((m) => m.name.toLowerCase() === model.toLowerCase());
+}
+
+const CURRENT_YEAR = new Date().getFullYear();
+
+/**
+ * Años válidos para un modelo, del más reciente al más antiguo. Sin modelo se
+ * devuelven los últimos veinticinco años, que es el rango útil para repuestos.
+ */
+export function yearsFor(make?: string, model?: string): number[] {
+  const found = make && model ? findModel(make, model) : undefined;
+  const from = found?.from ?? CURRENT_YEAR - 24;
+  const to = found?.to ?? CURRENT_YEAR;
+  const years: number[] = [];
+  for (let y = Math.min(to, CURRENT_YEAR); y >= from; y--) years.push(y);
+  return years;
+}
+
+/** Rango legible de un modelo: "2015 – presente", "2005 – 2015" o "sin dato". */
+export function modelRange(model: VehicleModel) {
+  if (model.from == null) return "años sin dato";
+  return `${model.from} – ${model.to ?? "presente"}`;
+}

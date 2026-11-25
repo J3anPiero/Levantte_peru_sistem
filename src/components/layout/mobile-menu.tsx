@@ -8,6 +8,7 @@ import { Logo } from "@/components/ui/logo";
 
 const corporate = [
   { href: "/placa", label: "Buscar por placa" },
+  { href: "/piezas", label: "Catálogo de piezas" },
   { href: "/marcas", label: "Marcas" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/garantias-y-devoluciones", label: "Garantías y devoluciones" },

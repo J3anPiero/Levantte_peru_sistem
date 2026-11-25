@@ -22,6 +22,8 @@ export interface CatalogQuery {
   availability?: ("en-stock" | "bajo-pedido")[];
   type?: ("original" | "alternativo")[];
   position?: ("delantero" | "posterior")[];
+  /** Slug del tipo de pieza en la nomenclatura. */
+  partType?: string;
   q?: string;
   sort?: SortKey;
   page?: number;
@@ -107,6 +109,7 @@ export function searchProducts(query: CatalogQuery) {
     const set = new Set(query.position);
     list = list.filter((p) => p.position && set.has(p.position));
   }
+  if (query.partType) list = list.filter((p) => p.partType === query.partType);
   if (query.q) list = list.filter((p) => matchesSearch(p, query.q!));
 
   switch (query.sort) {
