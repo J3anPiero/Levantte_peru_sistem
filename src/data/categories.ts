@@ -16,14 +16,32 @@ export const categories: Category[] = [
   { id: "cilindros-y-bombas", slug: "cilindros-y-bombas", name: "Cilindros y bombas", description: "Bombas de freno y cilindros de rueda.", icon: "kit", parentId: "frenos" },
   { id: "liquido-de-frenos", slug: "liquido-de-frenos", name: "Líquido de frenos", description: "DOT 3, DOT 4 y DOT 5.1.", icon: "fluid", parentId: "frenos" },
 
-  { id: "bujias", slug: "bujias", name: "Bujías", description: "Bujías de cobre, platino e iridio.", icon: "plug", parentId: "motor" },
-  { id: "distribucion", slug: "distribucion", name: "Distribución", description: "Kits de distribución, correas y tensores.", icon: "belt", parentId: "motor" },
+  { id: "bujias", slug: "bujias", name: "Bujías y encendido", description: "Bujías de cobre, platino e iridio, y bobinas.", icon: "plug", parentId: "motor" },
+  { id: "distribucion", slug: "distribucion", name: "Distribución y correas", description: "Kits de distribución, correas y tensores.", icon: "belt", parentId: "motor" },
+  { id: "refrigeracion", slug: "refrigeracion", name: "Refrigeración", description: "Bombas de agua, termostatos y mangueras.", icon: "kit", parentId: "motor" },
+  { id: "soportes-de-motor", slug: "soportes-de-motor", name: "Soportes de motor", description: "Tacos y soportes de motor y caja.", icon: "kit", parentId: "motor" },
+
   { id: "amortiguadores", slug: "amortiguadores", name: "Amortiguadores", description: "Amortiguadores y struts.", icon: "shock", parentId: "suspension" },
+  { id: "rotulas-y-terminales", slug: "rotulas-y-terminales", name: "Rótulas y terminales", description: "Rótulas, terminales de dirección y bieletas.", icon: "kit", parentId: "suspension" },
+  { id: "direccion", slug: "direccion", name: "Dirección", description: "Cremalleras y componentes de dirección.", icon: "kit", parentId: "suspension" },
+
   { id: "filtros-de-aceite", slug: "filtros-de-aceite", name: "Filtros de aceite", description: "", icon: "filter", parentId: "filtros" },
   { id: "filtros-de-aire", slug: "filtros-de-aire", name: "Filtros de aire", description: "", icon: "airfilter", parentId: "filtros" },
+  { id: "filtros-de-cabina", slug: "filtros-de-cabina", name: "Filtros de cabina", description: "", icon: "airfilter", parentId: "filtros" },
+  { id: "filtros-de-combustible", slug: "filtros-de-combustible", name: "Filtros de combustible", description: "", icon: "filter", parentId: "filtros" },
+
   { id: "baterias", slug: "baterias", name: "Baterías", description: "", icon: "battery", parentId: "electrico" },
+  { id: "alternadores", slug: "alternadores", name: "Alternadores", description: "", icon: "battery", parentId: "electrico" },
+  { id: "arrancadores", slug: "arrancadores", name: "Arrancadores", description: "", icon: "battery", parentId: "electrico" },
+  { id: "sensores", slug: "sensores", name: "Sensores", description: "Sondas lambda, sensores ABS y de posición.", icon: "sensor", parentId: "electrico" },
+  { id: "bombas-de-combustible", slug: "bombas-de-combustible", name: "Bombas de combustible", description: "", icon: "kit", parentId: "electrico" },
+
   { id: "faros", slug: "faros", name: "Faros", description: "", icon: "lamp", parentId: "iluminacion" },
+  { id: "neblineros", slug: "neblineros", name: "Neblineros", description: "", icon: "lamp", parentId: "iluminacion" },
+
   { id: "embrague", slug: "embrague", name: "Embrague", description: "", icon: "clutch", parentId: "transmision" },
+  { id: "semiejes", slug: "semiejes", name: "Semiejes y homocinéticas", description: "", icon: "transmission", parentId: "transmision" },
+
   { id: "espejos", slug: "espejos", name: "Espejos", description: "", icon: "body", parentId: "carroceria" },
 ];
 

@@ -122,6 +122,32 @@ Tres decisiones que conviene conocer:
 - **`part-types.ts` pesa 110 KB y solo se usa desde el servidor** (`src/lib/parts-index.ts`), así que
   no viaja al navegador. `vehicles.ts` sí llega al cliente porque el selector lo necesita al instante.
 
+### El catálogo de productos
+
+`src/data/products.ts` combina dos orígenes, y la diferencia importa:
+
+| Archivo | Qué es | OEM |
+|---|---|---|
+| `products-core.ts` | 21 fichas escritas a mano, con descripción propia | Verificado |
+| `products-generated.ts` | 176 productos generados con `scripts/generar-productos.mjs` | Sin asignar |
+
+En los generados, **el nombre de la pieza y la compatibilidad son reales**: el nombre sale de la
+nomenclatura y la compatibilidad de las generaciones declaradas en la base, con su rango de años.
+Las marcas de repuesto son fabricantes que existen y cada plantilla solo admite los que fabrican esa
+familia, así que ninguna asigna filtros a Brembo.
+
+**Lo que no es real y hay que reemplazar antes de publicar**: los precios son marcadores dentro de
+bandas plausibles para el mercado peruano y el stock es de muestra.
+
+**No se generan números OEM a propósito.** Inventar un número de parte es el error más caro de una
+tienda de repuestos, porque hace que el cliente compre una pieza que no calza; se cargan desde el
+catálogo del proveedor. Por eso `oem` queda sin definir en los 176 generados.
+
+La generación es determinista: la misma entrada produce siempre el mismo archivo, así que el diff
+solo cambia cuando cambian los datos o las reglas.
+
+### La nomenclatura
+
 La página `/piezas` recorre la nomenclatura con buscador, índice alfabético y paginación, marcando lo
 que hay en stock. Cada tipo con stock enlaza a `/catalogo?pieza=<slug>`; el parámetro se llama `pieza`
 y no `tipo` porque ese último ya lo ocupa el filtro de original contra alternativo.
