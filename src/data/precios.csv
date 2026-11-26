@@ -1,0 +1,21 @@
+# Lista de precios de GAUDI. Este archivo es la única fuente de precios reales.
+#
+# Cada fila que agregues aquí reemplaza el precio de muestra de ese SKU y lo
+# marca como precio confirmado. Los SKU que no estén en esta lista siguen con el
+# marcador de posición y el panel los cuenta como pendientes.
+#
+# Después de editar, ejecuta:   npm run precios
+#
+# Columnas:
+#   sku           Obligatorio. El código tal como aparece en el panel (LP-FR-10007).
+#   precio        Obligatorio. Precio de venta al público en soles, con IGV.
+#   precio_lista  Opcional. Precio tachado para mostrar una oferta. Debe ser mayor.
+#   costo         Opcional. Costo de reposición; solo se ve en el panel.
+#
+# Las líneas que empiezan con # se ignoran. Ejemplos del formato:
+#
+#   LP-FR-10007,145.00,179.00,96.50
+#   LP-FL-10147,32.50,,21.00
+#   LP-EN-10084,890.00,,615.00
+#
+sku,precio,precio_lista,costo

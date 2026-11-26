@@ -7,7 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "precios": "node scripts/cargar-precios.mjs",
+    "datos:vehiculos": "node scripts/generar-datos-vehiculos.mjs",
+    "datos:productos": "node scripts/generar-productos.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

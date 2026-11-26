@@ -70,6 +70,14 @@ export interface Product {
   position?: Position;
   price: number;
   compareAtPrice?: number;
+  /** Costo de reposición. Solo se usa en el panel; nunca llega a la tienda. */
+  cost?: number;
+  /**
+   * `true` mientras el precio sea un marcador de posición, es decir, mientras el
+   * SKU no aparezca en src/data/precios.csv. La tienda no lo muestra: sirve
+   * para que el panel sepa qué falta cargar antes de publicar.
+   */
+  priceEstimated?: boolean;
   stock: number;
   stockMin: number;
   leadTimeDays?: number;

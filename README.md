@@ -16,6 +16,10 @@ npm install
 npm run dev        # http://localhost:3000
 npm run build      # compilación de producción
 npm run typecheck  # verificación de tipos
+
+npm run precios          # carga src/data/precios.csv en el catálogo
+npm run datos:vehiculos  # regenera marcas, modelos y nomenclatura desde data-source/
+npm run datos:productos  # regenera el catálogo amplio
 ```
 
 ## Identidad
@@ -81,6 +85,7 @@ public/marca/            Archivos del logotipo
 - `src/lib/site.ts`: datos de la empresa (dirección, teléfono, WhatsApp, RUC, redes).
 - `src/data/*.ts`: productos, categorías, marcas y pedidos de demostración. Al conectar la API,
   sustituir las funciones de `src/lib/catalog.ts` por llamadas al backend manteniendo las mismas firmas.
+- `src/data/precios.csv`: la lista de precios del negocio, hoy vacía. Ver [Precios](#precios).
 - Las imágenes de producto usan ilustraciones (`PartIllustration`) como marcador; añadir un campo
   `images` al producto y reemplazar en `product-card.tsx`, `gallery.tsx` y el carrito.
 - Reseñas del inicio, cifras del hero y textos legales marcados con corchetes: completar con contenido real.
@@ -136,8 +141,8 @@ nomenclatura y la compatibilidad de las generaciones declaradas en la base, con 
 Las marcas de repuesto son fabricantes que existen y cada plantilla solo admite los que fabrican esa
 familia, así que ninguna asigna filtros a Brembo.
 
-**Lo que no es real y hay que reemplazar antes de publicar**: los precios son marcadores dentro de
-bandas plausibles para el mercado peruano y el stock es de muestra.
+**Lo que no es real y hay que reemplazar antes de publicar**: el stock es de muestra y los precios
+son marcadores dentro de bandas de mercado (ver [Precios](#precios)).
 
 **No se generan números OEM a propósito.** Inventar un número de parte es el error más caro de una
 tienda de repuestos, porque hace que el cliente compre una pieza que no calza; se cargan desde el
@@ -145,6 +150,46 @@ catálogo del proveedor. Por eso `oem` queda sin definir en los 176 generados.
 
 La generación es determinista: la misma entrada produce siempre el mismo archivo, así que el diff
 solo cambia cuando cambian los datos o las reglas.
+
+## Precios
+
+El precio que trae un producto en `products-core.ts` o `products-generated.ts` **no es el precio del
+negocio**: es un marcador sorteado dentro de la banda de su familia de pieza. El precio real se carga
+aparte, por SKU, y pisa al marcador.
+
+### Cómo se cargan
+
+1. Abre `src/data/precios.csv` y agrega una fila por SKU:
+   `sku,precio,precio_lista,costo`. Solo `sku` y `precio` son obligatorios; `precio_lista` es el
+   tachado de la oferta y `costo` solo se ve en el panel.
+2. Corre `npm run precios`. El script valida y escribe `src/data/price-list.ts`.
+3. `src/data/products.ts` une la lista con el catálogo por SKU.
+
+El script **falla sin escribir nada** y dice la línea exacta si un SKU no existe, está repetido, el
+precio no es un número o el precio de lista es menor que el de venta. Avisa, sin bloquear, cuando el
+precio queda por debajo del costo. Un precio mal cargado se cobra mal, así que no se tolera a medias.
+
+Mientras un SKU no esté en el CSV, su producto queda con `priceEstimated: true`. La tienda no muestra
+esa marca; el panel de productos sí, con un aviso de cuántos faltan, para que nadie publique creyendo
+que los precios ya están.
+
+Esta separación existe porque el catálogo grande se regenera: si los precios reales vivieran en los
+archivos generados, cada regeneración los borraría.
+
+### De dónde salen las bandas
+
+Dieciséis de las treinta y nueve familias (85 de los 176 productos generados) tienen su banda tomada
+de precios de venta al público publicados por tiendas peruanas y Mercado Libre Perú, consultados en
+noviembre de 2026. La tabla con los rangos y los ejemplos concretos está en la cabecera de
+`scripts/generar-productos.mjs`, junto a las plantillas marcadas con `banda: "mercado"`.
+
+Las demás conservan una banda estimada. No hay precios peruanos publicados para alternadores,
+arrancadores, bombas de agua, espejos ni sensores de autos livianos: las tiendas que los listan piden
+cotización por placa o por código OEM.
+
+Son precios de anuncio, no de compra verificada, y cambian por motor, año y marca. Sirven para que la
+tienda se vea coherente mientras llega la lista del proveedor; **el margen y el precio final son una
+decisión del negocio, no de este repositorio**.
 
 ### La nomenclatura
 
