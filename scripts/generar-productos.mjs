@@ -13,8 +13,13 @@
  *   REAL  Las marcas de repuesto son fabricantes que existen y que fabrican esa
  *         familia de pieza; ninguna plantilla asigna, por ejemplo, filtros a
  *         Brembo.
- *   NO    Los precios son marcadores de posición dentro de bandas plausibles
- *         para el mercado peruano. Hay que reemplazarlos por la lista real.
+ *   NO    Los precios son marcadores de posición. La banda de cada familia está
+ *         tomada de precios de venta al público observados en el mercado
+ *         peruano (ver BANDAS más abajo), pero el precio concreto de cada
+ *         producto se sortea dentro de esa banda: sirve para que la tienda se
+ *         vea coherente, no para cobrar. El precio real se carga por SKU en
+ *         src/data/precios.csv y pisa a este; mientras no esté ahí, el producto
+ *         queda marcado como `priceEstimated` para el panel.
  *   NO    El stock es de muestra.
  *   NO    No se generan números OEM ni referencias de fabricante. Inventar un
  *         número de parte es el error más caro de una tienda de repuestos:
@@ -128,6 +133,36 @@ const ORIGINAL_BY_MAKE = {
   Nissan: "nissan-genuine",
 };
 
+/*
+ * BANDAS DE PRECIO
+ *
+ * Las familias marcadas con `banda: "mercado"` tienen su rango tomado de
+ * precios de venta al público publicados por tiendas peruanas y por Mercado
+ * Libre Perú, consultados en noviembre de 2026. Son precios de anuncio, no de
+ * compra verificada, y varían por motor, año y marca:
+ *
+ *   Pastillas de freno       S/ 80 – 215   genéricas desde 80; Fritec 150; Nikmat 215
+ *   Discos de freno          S/ 160 – 585  March/Versa 160; CX-5 585; Santa Fe 463
+ *   Bujías (juego de 4)      S/ 60 – 360   cobre 60–120, platino 120–200, iridio 200–360
+ *   Kit de distribución      S/ 520 – 1700 Hilux 3.0 523; K2700 651; Amarok 741
+ *   Kit de embrague          S/ 235 – 1350 Atos/Eon 235; Yaris 430; Hilux 1GD 1350
+ *   Filtro de aceite         S/ 12 – 51    Bosch 18–27 en tienda; Mann 25–37
+ *   Filtro de aire           S/ 40 – 137   Bosch 40; Mann CF600/1 69; C23610 137
+ *   Amortiguador (unidad)    S/ 250 – 500  Hilux KYB 360; Sentra 365; CR-V 495
+ *   Rótulas y terminales     S/ 18 – 240   GMB/CTR 76–78; Accent interior 184
+ *   Faro delantero           S/ 348 – 1940 Sentra B13 348; Sportage 1390; Prisma LED 1940
+ *   Batería 12 V             S/ 293 – 340  Etna HL-11 294; Etna W-13 310; Capsa 340
+ *
+ * Las familias sin esa marca conservan una banda estimada: no encontré precios
+ * peruanos publicados para alternadores, arrancadores, bombas de agua, espejos
+ * ni sensores de autos livianos. Las tiendas que los listan piden cotización
+ * por placa o por código OEM. Quedan como estimación declarada hasta que entre
+ * la lista del proveedor.
+ *
+ * Nada de esto es el precio de GAUDI: el margen y la lista final se cargan por
+ * SKU en src/data/precios.csv.
+ */
+
 /**
  * Cada plantilla describe una familia de pieza: a qué categoría pertenece, qué
  * fabricantes la hacen, en qué banda de precio se mueve y qué ficha técnica
@@ -135,13 +170,13 @@ const ORIGINAL_BY_MAKE = {
  */
 const templates = [
   // Frenos
-  { slug: "brake-pad-set-front", cat: "pastillas-de-freno", kind: "pads", pos: "delantero", price: [110, 290], warranty: 12, brands: ["bosch", "brembo", "trw", "akebono", "ferodo", "delphi"], original: true, apps: 6,
+  { slug: "brake-pad-set-front", cat: "pastillas-de-freno", kind: "pads", pos: "delantero", price: [90, 240], banda: "mercado", warranty: 12, brands: ["bosch", "brembo", "trw", "akebono", "ferodo", "delphi"], original: true, apps: 6,
     specs: (r) => [["Material", pick(r, ["Cerámico, sin asbesto", "Semimetálico", "Orgánico de baja abrasión"])], ["Contenido", "4 pastillas + láminas antirruido"]] },
-  { slug: "brake-pad-set-rear", cat: "pastillas-de-freno", kind: "pads", pos: "posterior", price: [95, 250], warranty: 12, brands: ["bosch", "brembo", "trw", "ferodo", "delphi"], original: true, apps: 5,
+  { slug: "brake-pad-set-rear", cat: "pastillas-de-freno", kind: "pads", pos: "posterior", price: [85, 210], banda: "mercado", warranty: 12, brands: ["bosch", "brembo", "trw", "ferodo", "delphi"], original: true, apps: 5,
     specs: (r) => [["Material", pick(r, ["Cerámico, sin asbesto", "Semimetálico"])], ["Contenido", "4 pastillas"]] },
-  { slug: "front-brake-disc", cat: "discos-de-freno", kind: "disc", pos: "delantero", price: [150, 430], warranty: 12, brands: ["brembo", "bosch", "trw", "delphi"], original: true, apps: 6,
+  { slug: "front-brake-disc", cat: "discos-de-freno", kind: "disc", pos: "delantero", price: [160, 480], banda: "mercado", warranty: 12, brands: ["brembo", "bosch", "trw", "delphi"], original: true, apps: 6,
     specs: (r) => [["Tipo", pick(r, ["Ventilado", "Sólido"])], ["Acabado", "Recubrimiento anticorrosión"]] },
-  { slug: "rear-brake-disc", cat: "discos-de-freno", kind: "disc", pos: "posterior", price: [140, 390], warranty: 12, brands: ["brembo", "bosch", "trw"], apps: 4,
+  { slug: "rear-brake-disc", cat: "discos-de-freno", kind: "disc", pos: "posterior", price: [150, 430], banda: "mercado", warranty: 12, brands: ["brembo", "bosch", "trw"], apps: 4,
     specs: () => [["Tipo", "Sólido"]] },
   { slug: "brake-drum", cat: "tambores-y-zapatas", kind: "disc", pos: "posterior", price: [160, 420], warranty: 12, brands: ["bosch", "trw"], apps: 3, specs: () => [["Material", "Fundición gris"]] },
   { slug: "brake-master-cylinder", cat: "cilindros-y-bombas", kind: "kit", price: [180, 540], warranty: 12, brands: ["bosch", "trw", "delphi"], apps: 3, specs: () => [["Montaje", "Con depósito"]] },
@@ -149,27 +184,27 @@ const templates = [
   { slug: "brake-pad-wear-sensor", cat: "pastillas-de-freno", kind: "sensor", pos: "delantero", price: [30, 85], warranty: 12, brands: ["bosch", "trw", "febi"], original: true, apps: 3, specs: () => [] },
 
   // Motor
-  { slug: "spark-plug-set", cat: "bujias", kind: "plug", price: [90, 260], warranty: 12, brands: ["ngk", "denso", "bosch", "champion"], apps: 6,
+  { slug: "spark-plug-set", cat: "bujias", kind: "plug", price: [70, 340], banda: "mercado", warranty: 12, brands: ["ngk", "denso", "bosch", "champion"], apps: 6,
     specs: (r) => [["Electrodo", pick(r, ["Iridio", "Platino", "Níquel"])], ["Contenido", "Juego de 4"]] },
   { slug: "ignition-coil", cat: "bujias", kind: "sensor", price: [120, 380], warranty: 12, brands: ["denso", "bosch", "ngk", "delphi"], apps: 4, specs: () => [["Tipo", "Bobina individual (lápiz)"]] },
-  { slug: "timing-belt-kit", cat: "distribucion", kind: "belt", price: [280, 720], warranty: 12, brands: ["gates", "dayco", "continental", "skf"], apps: 5, specs: () => [["Contenido", "Correa + tensor + poleas"]] },
-  { slug: "timing-chain-kit", cat: "distribucion", kind: "belt", price: [450, 1150], warranty: 12, brands: ["aisin", "febi", "skf"], apps: 3, specs: () => [["Contenido", "Cadena + tensor + guías"]] },
+  { slug: "timing-belt-kit", cat: "distribucion", kind: "belt", price: [480, 1250], banda: "mercado", warranty: 12, brands: ["gates", "dayco", "continental", "skf"], apps: 5, specs: () => [["Contenido", "Correa + tensor + poleas"]] },
+  { slug: "timing-chain-kit", cat: "distribucion", kind: "belt", price: [700, 1700], banda: "mercado", warranty: 12, brands: ["aisin", "febi", "skf"], apps: 3, specs: () => [["Contenido", "Cadena + tensor + guías"]] },
   { slug: "alternator-belt", cat: "distribucion", kind: "belt", price: [45, 150], warranty: 6, brands: ["gates", "dayco", "continental", "bosch"], apps: 5, specs: () => [["Tipo", "Poli V estriada"]] },
   { slug: "water-pump", cat: "refrigeracion", kind: "kit", price: [160, 450], warranty: 12, brands: ["gmb", "aisin", "gates", "skf"], apps: 5, specs: () => [["Incluye", "Empaquetadura"]] },
   { slug: "thermostat", cat: "refrigeracion", kind: "kit", price: [60, 190], warranty: 12, brands: ["wahler", "gates", "mahle"], apps: 4, specs: (r) => [["Apertura", `${pick(r, [82, 85, 88])} °C`]] },
   { slug: "engine-mount", cat: "soportes-de-motor", kind: "kit", price: [90, 320], warranty: 12, brands: ["corteco", "febi", "moog"], apps: 4, specs: () => [["Material", "Caucho y metal"]] },
 
   // Filtros
-  { slug: "oil-filter", cat: "filtros-de-aceite", kind: "filter", price: [25, 75], warranty: 6, brands: ["mann-filter", "mahle", "hengst", "bosch", "denso"], original: true, apps: 7, specs: () => [["Tipo", "Roscado con válvula antirretorno"]] },
-  { slug: "air-filter", cat: "filtros-de-aire", kind: "airfilter", price: [40, 130], warranty: 6, brands: ["mann-filter", "mahle", "hengst", "bosch"], apps: 7, specs: () => [["Tipo", "Panel con sello de poliuretano"]] },
+  { slug: "oil-filter", cat: "filtros-de-aceite", kind: "filter", price: [18, 60], banda: "mercado", warranty: 6, brands: ["mann-filter", "mahle", "hengst", "bosch", "denso"], original: true, apps: 7, specs: () => [["Tipo", "Roscado con válvula antirretorno"]] },
+  { slug: "air-filter", cat: "filtros-de-aire", kind: "airfilter", price: [40, 140], banda: "mercado", warranty: 6, brands: ["mann-filter", "mahle", "hengst", "bosch"], apps: 7, specs: () => [["Tipo", "Panel con sello de poliuretano"]] },
   { slug: "cabin-air-filter", cat: "filtros-de-cabina", kind: "airfilter", price: [35, 110], warranty: 6, brands: ["mann-filter", "corteco", "mahle", "bosch"], apps: 6, specs: (r) => [["Tipo", pick(r, ["Partículas", "Carbón activado"])]] },
   { slug: "fuel-filter", cat: "filtros-de-combustible", kind: "filter", price: [45, 160], warranty: 6, brands: ["mann-filter", "bosch", "delphi", "hengst"], apps: 5, specs: () => [["Montaje", "En línea"]] },
 
   // Suspensión y dirección
-  { slug: "front-shock-absorber", cat: "amortiguadores", kind: "shock", pos: "delantero", price: [180, 480], warranty: 12, brands: ["kyb", "monroe", "sachs", "bosch"], apps: 6, specs: (r) => [["Tipo", pick(r, ["Gas, doble tubo", "Gas, monotubo"])], ["Unidad", "Vendido por pieza"]] },
-  { slug: "rear-shock-absorber", cat: "amortiguadores", kind: "shock", pos: "posterior", price: [160, 420], warranty: 12, brands: ["kyb", "monroe", "sachs"], apps: 5, specs: () => [["Unidad", "Vendido por pieza"]] },
-  { slug: "ball-joint", cat: "rotulas-y-terminales", kind: "kit", price: [60, 200], warranty: 12, brands: ["moog", "febi", "trw", "skf"], apps: 5, specs: () => [["Incluye", "Guardapolvo y tuerca"]] },
-  { slug: "tie-rod-end", cat: "rotulas-y-terminales", kind: "kit", price: [55, 175], warranty: 12, brands: ["moog", "trw", "febi"], apps: 5, specs: () => [["Rosca", "Métrica, según aplicación"]] },
+  { slug: "front-shock-absorber", cat: "amortiguadores", kind: "shock", pos: "delantero", price: [180, 520], banda: "mercado", warranty: 12, brands: ["kyb", "monroe", "sachs", "bosch"], apps: 6, specs: (r) => [["Tipo", pick(r, ["Gas, doble tubo", "Gas, monotubo"])], ["Unidad", "Vendido por pieza"]] },
+  { slug: "rear-shock-absorber", cat: "amortiguadores", kind: "shock", pos: "posterior", price: [160, 460], banda: "mercado", warranty: 12, brands: ["kyb", "monroe", "sachs"], apps: 5, specs: () => [["Unidad", "Vendido por pieza"]] },
+  { slug: "ball-joint", cat: "rotulas-y-terminales", kind: "kit", price: [50, 200], banda: "mercado", warranty: 12, brands: ["moog", "febi", "trw", "skf"], apps: 5, specs: () => [["Incluye", "Guardapolvo y tuerca"]] },
+  { slug: "tie-rod-end", cat: "rotulas-y-terminales", kind: "kit", price: [45, 185], banda: "mercado", warranty: 12, brands: ["moog", "trw", "febi"], apps: 5, specs: () => [["Rosca", "Métrica, según aplicación"]] },
   { slug: "front-sway-bar-link", cat: "rotulas-y-terminales", kind: "kit", pos: "delantero", price: [40, 130], warranty: 12, brands: ["moog", "febi", "trw", "skf"], apps: 5, specs: () => [] },
   { slug: "steering-rack", cat: "direccion", kind: "kit", price: [850, 2400], warranty: 12, brands: ["trw", "bosch", "delphi"], apps: 2, specs: () => [["Estado", "Nueva"]] },
 
@@ -181,12 +216,12 @@ const templates = [
   { slug: "fuel-pump", cat: "bombas-de-combustible", kind: "kit", price: [220, 780], warranty: 12, brands: ["bosch", "delphi", "denso"], apps: 4, specs: () => [["Montaje", "En el tanque"]] },
 
   // Iluminación
-  { slug: "right-headlight", cat: "faros", kind: "lamp", price: [220, 760], warranty: 12, brands: ["depo", "hella", "valeo"], apps: 5, specs: (r) => [["Lado", "Derecho (pasajero)"], ["Fuente", pick(r, ["Halógeno H4", "Halógeno H7", "LED"])]] },
-  { slug: "left-headlight", cat: "faros", kind: "lamp", price: [220, 760], warranty: 12, brands: ["depo", "hella", "valeo"], apps: 5, specs: (r) => [["Lado", "Izquierdo (conductor)"], ["Fuente", pick(r, ["Halógeno H4", "Halógeno H7", "LED"])]] },
+  { slug: "right-headlight", cat: "faros", kind: "lamp", price: [320, 1400], banda: "mercado", warranty: 12, brands: ["depo", "hella", "valeo"], apps: 5, specs: (r) => [["Lado", "Derecho (pasajero)"], ["Fuente", pick(r, ["Halógeno H4", "Halógeno H7", "LED"])]] },
+  { slug: "left-headlight", cat: "faros", kind: "lamp", price: [320, 1400], banda: "mercado", warranty: 12, brands: ["depo", "hella", "valeo"], apps: 5, specs: (r) => [["Lado", "Izquierdo (conductor)"], ["Fuente", pick(r, ["Halógeno H4", "Halógeno H7", "LED"])]] },
   { slug: "right-fog-light", cat: "neblineros", kind: "lamp", price: [110, 340], warranty: 12, brands: ["depo", "hella", "osram"], apps: 4, specs: () => [["Lado", "Derecho"]] },
 
   // Transmisión
-  { slug: "clutch-kit", cat: "embrague", kind: "clutch", price: [480, 1500], warranty: 12, brands: ["exedy", "luk", "valeo", "sachs", "aisin"], apps: 5, specs: () => [["Contenido", "Disco, prensa y collarín"]] },
+  { slug: "clutch-kit", cat: "embrague", kind: "clutch", price: [260, 1300], banda: "mercado", warranty: 12, brands: ["exedy", "luk", "valeo", "sachs", "aisin"], apps: 5, specs: () => [["Contenido", "Disco, prensa y collarín"]] },
   { slug: "clutch-release-bearing", cat: "embrague", kind: "clutch", price: [120, 380], warranty: 12, brands: ["exedy", "luk", "skf", "sachs"], apps: 3, specs: () => [] },
   { slug: "outer-cv-joint", cat: "semiejes", kind: "transmission", price: [180, 560], warranty: 12, brands: ["skf", "febi", "gmb"], apps: 4, specs: () => [["Incluye", "Guardapolvo y grasa"]] },
 
@@ -319,7 +354,9 @@ products.sort((a, b) => a.sku.localeCompare(b.sku));
 const file = `// Archivo generado por scripts/generar-productos.mjs — no editar a mano.
 //
 // Nombres de pieza y compatibilidades provienen de data-source/ (car-api, MIT).
-// PRECIOS Y STOCK SON DE MUESTRA: reemplazar por la lista real antes de publicar.
+// PRECIOS Y STOCK SON DE MUESTRA: el precio real se carga por SKU en
+// src/data/precios.csv y pisa a este. Mientras un SKU no esté en esa lista, el
+// producto queda marcado como priceEstimated y el panel lo cuenta como pendiente.
 // No se generan números OEM: se cargan desde el catálogo del proveedor.
 
 import type { Product } from "@/lib/types";
@@ -334,4 +371,12 @@ for (const p of products) byCat[p.categoryId] = (byCat[p.categoryId] ?? 0) + 1;
 console.log(`Productos generados: ${products.length}`);
 console.log(`Aplicaciones disponibles: ${applications.length}`);
 console.log(`Sin stock: ${products.filter((p) => p.stock === 0).length} · En oferta: ${products.filter((p) => p.compareAtPrice).length}`);
+
+const marketTemplates = templates.filter((t) => t.banda === "mercado");
+const marketSlugs = new Set(marketTemplates.map((t) => t.slug));
+const withMarketBand = products.filter((p) => marketSlugs.has(p.partType)).length;
+console.log(
+  `Bandas de precio: ${marketTemplates.length} de ${templates.length} familias con referencia de mercado ` +
+    `(${withMarketBand} de ${products.length} productos). El resto queda con banda estimada.`,
+);
 console.log("Por categoría:", Object.entries(byCat).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}=${v}`).join(" "));
