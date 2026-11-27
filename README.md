@@ -268,6 +268,13 @@ debería colgar del usuario para que se vea también desde el celular.
 
 `FRENOS20` (20 % en frenos) y `BIENVENIDO10` (10 % general), definidos en `cart-provider.tsx`.
 
+## Facturación electrónica
+
+El plano arquitectónico del sistema de emisión SUNAT (UBL 2.1) está en
+[docs/arquitectura-facturacion-electronica.md](docs/arquitectura-facturacion-electronica.md):
+componentes, DDL de PostgreSQL, máquina de estados del comprobante, estrategia de correlativos y
+contratos REST. Todavía no hay código: ese documento es el acuerdo previo.
+
 ## Siguientes fases
 
 1. API (NestJS + PostgreSQL) con los módulos de catálogo, pedidos, inventario, clientes y pagos.
