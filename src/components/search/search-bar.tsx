@@ -51,6 +51,20 @@ function getRecognitionCtor(): SpeechRecognitionCtor | undefined {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition;
 }
 
+/*
+ * El dictado del navegador transcribe frases, no consultas: cierra con punto y,
+ * si cree que preguntaste algo, abre con "¿" y cierra con "?". Eso ensucia la
+ * búsqueda, porque "pastillas de freno." no coincide con nada del catálogo.
+ *
+ * Se quitan solo los signos de los extremos. Los de adentro se respetan a
+ * propósito: ahí viven los códigos de pieza, que llevan puntos y guiones
+ * (90915-YZZD2, MD-806.1), y recortarlos rompería justo la búsqueda que más
+ * importa en una tienda de repuestos.
+ */
+function limpiarDictado(text: string): string {
+  return text.replace(/^[\s¿¡"'«]+/, "").replace(/[\s.,;:!?"'»]+$/, "");
+}
+
 const errorMessages: Record<string, string> = {
   "not-allowed": "No diste permiso al micrófono. Actívalo en el candado de la barra de direcciones.",
   "service-not-allowed": "El navegador bloqueó el dictado. Revisa los permisos del sitio.",
@@ -114,7 +128,7 @@ export function SearchBar({ initialQuery = "", className }: { initialQuery?: str
         if (result.isFinal) final = true;
       }
       if (final) {
-        const clean = text.trim();
+        const clean = limpiarDictado(text.trim());
         setQuery(clean);
         setInterim("");
         setListening(false);
@@ -122,7 +136,9 @@ export function SearchBar({ initialQuery = "", className }: { initialQuery?: str
         recognition.stop();
         submit(clean);
       } else {
-        setInterim(text);
+        // También en vivo: si no, el campo muestra el punto un instante antes
+        // de que la transcripción se dé por final y parpadea.
+        setInterim(limpiarDictado(text));
       }
     };
 
