@@ -1,4 +1,5 @@
 import Link from "next/link";
+import clsx from "clsx";
 import { ChevronDown, Heart, LayoutGrid, ScanLine } from "lucide-react";
 import { topCategories, getChildren } from "@/data/categories";
 import { site } from "@/lib/site";
@@ -8,12 +9,26 @@ import { AccountBadge } from "@/components/auth/account-badge";
 import { SearchBar } from "@/components/search/search-bar";
 import { MobileMenu } from "./mobile-menu";
 
-/* Las seis categorías de más rotación en una tienda de repuestos, en ese orden.
-   No están las ocho a propósito: con ocho la fila desbordaba a 1366 px y la
-   última quedaba desteñida bajo el degradado, que es justo lo que hace que una
-   barra se vea rota. Iluminación y Carrocería siguen en el mega menú, con todas
-   sus subcategorías, que es donde se busca una pieza de carrocería. */
-const mainNav = ["frenos", "filtros", "motor", "suspension", "electrico", "transmision"];
+/* Las ocho categorías, ordenadas por rotación en una tienda de repuestos.
+   Piezas A-Z salió de aquí —no es una categoría, es el índice de la
+   nomenclatura, y ya tiene su fila al pie del mega menú.
+ *
+ * `hide` es el ancho por debajo del cual esa categoría deja de entrar y se
+ * retira de la barra. Una etiqueta a medias bajo el degradado es lo que hace
+ * que una barra se vea rota, así que se prefiere mostrar menos y completas: las
+ * ocho siguen en el mega menú, con todas sus subcategorías. Los cortes salen de
+ * medir el ancho real de cada etiqueta, no de los puntos de ruptura de Tailwind,
+ * que aquí no coinciden con nada: a 1280 px faltaban 35 px justos. */
+const mainNav = [
+  { id: "frenos", hide: "" },
+  { id: "filtros", hide: "" },
+  { id: "motor", hide: "max-[800px]:hidden" },
+  { id: "suspension", hide: "max-[900px]:hidden" },
+  { id: "electrico", hide: "max-[1000px]:hidden" },
+  { id: "transmision", hide: "max-[1110px]:hidden" },
+  { id: "iluminacion", hide: "max-[1220px]:hidden" },
+  { id: "carroceria", hide: "max-[1320px]:hidden" },
+];
 
 /* Los enlaces corporativos viven en la barra de servicio, arriba, para que la
    barra principal quede solo con lo que sirve para comprar y no se parta en dos
@@ -28,7 +43,9 @@ const utilityLinks = [
 ];
 
 export function Header() {
-  const navCats = mainNav.map((id) => topCategories.find((c) => c.id === id)!).filter(Boolean);
+  const navCats = mainNav
+    .map((n) => ({ ...n, cat: topCategories.find((c) => c.id === n.id)! }))
+    .filter((n) => n.cat);
 
   return (
     <header className="sticky top-0 z-40 bg-black text-white">
@@ -83,7 +100,7 @@ export function Header() {
       >
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand/45 to-transparent" />
 
-        <div className="container-x flex items-stretch gap-2">
+        <div className="container-x flex items-stretch">
           {/* Disparador del mega menú */}
           <div className="group relative -ml-4 shrink-0 sm:-ml-6">
             <Link
@@ -123,42 +140,30 @@ export function Header() {
             </div>
           </div>
 
-          {/* Buscar por placa queda junto al mega menú y no en el extremo
-              derecho: es el acceso que distingue a esta tienda y allá chocaba
-              con el degradado donde termina la fila que se desplaza, que lo
-              hacía parecer un corte y no un borde. */}
-          <div className="flex shrink-0 items-center py-1.5 pl-2.5">
-            <Link href="/placa" className="nav-featured">
-              <ScanLine className="size-4" strokeWidth={2.2} />
-              Buscar por placa
+          {/* El medio de la barra es una sola cosa: sitios a donde ir, todos con
+              el mismo peso y el mismo espaciado. Antes aquí convivían categorías,
+              un índice y una acción, y por eso se leía como una lista de cosas
+              sueltas en vez de una barra. Ofertas abre la fila porque es el
+              enlace de más intención y el punto rojo marca dónde empieza. */}
+          <div className="scroll-row flex min-w-0 flex-1 items-center gap-1 overflow-x-auto px-3 py-2">
+            <Link href="/catalogo?orden=nuevos" className="nav-link font-semibold text-white">
+              Ofertas
+              <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
             </Link>
-          </div>
-
-          <span aria-hidden="true" className="my-3 w-px shrink-0 bg-white/10" />
-
-          {/* Solo categorías, y solo categorías: una fila que se desplaza
-              cuando no entran. El relleno de la derecha deja que los 32 px de
-              degradado de .scroll-row caigan sobre espacio vacío cuando todas
-              entran, en vez de desteñir la última etiqueta. */}
-          <div className="scroll-row flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto py-1.5 pr-8">
-            {navCats.map((c) => (
-              <Link key={c.id} href={`/catalogo/${c.slug}`} className="nav-link">
-                {c.name.split(" y ")[0]}
+            {navCats.map(({ cat, hide }) => (
+              <Link key={cat.id} href={`/catalogo/${cat.slug}`} className={clsx("nav-link", hide)}>
+                {cat.name.split(" y ")[0]}
               </Link>
             ))}
           </div>
 
-          <span aria-hidden="true" className="my-3 w-px shrink-0 bg-white/10" />
-
-          {/* Fuera de la fila que se desplaza, ancladas a la derecha, las dos
-              que nunca deberían quedar cortadas. Piezas A-Z además no es una
-              categoría: es el índice de la nomenclatura, y entre las categorías
-              se leía como una más. */}
-          <div className="flex shrink-0 items-center py-1.5 pl-1">
-            <Link href="/piezas" className="nav-link">Piezas A-Z</Link>
-            <Link href="/catalogo?orden=nuevos" className="nav-link text-white">
-              Ofertas
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
+          {/* La única acción de la barra, sola en el extremo derecho. Enmarca la
+              fila junto al bloque rojo de la izquierda en vez de pelearse con él,
+              que es lo que pasaba cuando los dos rojos iban pegados. */}
+          <div className="flex shrink-0 items-center py-2 pl-3">
+            <Link href="/placa" className="nav-featured">
+              <ScanLine className="size-4" strokeWidth={2.2} />
+              Buscar por placa
             </Link>
           </div>
         </div>
