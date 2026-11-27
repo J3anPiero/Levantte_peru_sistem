@@ -233,6 +233,18 @@ Dos reglas de negocio quedaron fijadas en el código y conviene revisarlas: el s
 primero a los repuestos y después al envío, y el cashback se calcula sobre el dinero realmente
 pagado, descontando el saldo usado, para que la billetera no se retroalimente.
 
+### Entrar como cliente
+
+En `/cuenta` hay un botón **Entrar con la cuenta de prueba**, y los mismos datos se pueden escribir
+a mano: `cliente@demo.gaudi.pe` / `clientedemo`. Viene con S/ 47.30 de saldo y tres movimientos para
+que el área de cliente no se vea vacía.
+
+La cuenta se define en `src/data/demo-account.ts` y `auth-provider.tsx` la siembra la primera vez
+que se abre el sitio en cada navegador. Hace falta porque las cuentas viven en `localStorage`: una
+creada en un equipo no existe en otro, así que sin esto no hay forma de enseñar el área de cliente
+a nadie. **Se borra cuando entre el backend**, junto con el botón del formulario: una contraseña
+publicada en el repositorio solo es admisible mientras no haya servidor ni datos de nadie detrás.
+
 **Esto es una capa de demostración.** Las cuentas viven en `localStorage` del navegador. Las
 contraseñas se derivan con PBKDF2 (150 mil iteraciones, SHA-256, sal por usuario) y nunca se guardan
 en claro, pero cualquiera con las herramientas de desarrollo puede leer o editar el saldo. No es

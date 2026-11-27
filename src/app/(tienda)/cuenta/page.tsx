@@ -5,6 +5,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import { ArrowDownLeft, ArrowUpRight, Check, Info, LogOut, Package, ShieldCheck, Wallet, Wrench } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
+import { demoAccount } from "@/data/demo-account";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { formatDateTime, formatPrice } from "@/lib/format";
 import { formatRate, tiers, type CustomerType } from "@/lib/wallet";
@@ -37,14 +38,18 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const entrar = async (correo: string, clave: string) => {
+    setError("");
+    const res = await login(correo, clave);
+    if (!res.ok) setError(res.error ?? "No se pudo iniciar sesión.");
+  };
+
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={async (e) => {
+      onSubmit={(e) => {
         e.preventDefault();
-        setError("");
-        const res = await login(email, password);
-        if (!res.ok) setError(res.error ?? "No se pudo iniciar sesión.");
+        void entrar(email, password);
       }}
     >
       <Field id="l-email" label="Correo electrónico">
@@ -57,6 +62,32 @@ function LoginForm() {
       <button type="submit" disabled={busy} className="btn-primary">
         {busy ? "Verificando…" : "Ingresar"}
       </button>
+
+      {/*
+        Acceso directo al área de cliente sin registrarse. Las cuentas viven en
+        el navegador de cada visitante, así que esta se siembra sola al abrir el
+        sitio: ver src/data/demo-account.ts, que también explica cuándo se quita.
+      */}
+      <div className="flex flex-col items-start gap-2.5 rounded-xl border border-dashed border-line-2 bg-mist p-4">
+        <p className="m-0 text-[13px] font-semibold">¿Solo quieres ver cómo es por dentro?</p>
+        <p className="m-0 text-xs leading-relaxed text-muted">
+          Entra con la cuenta de prueba <code className="rounded bg-ink/8 px-1.5 py-0.5 font-mono">{demoAccount.email}</code>,
+          contraseña <code className="rounded bg-ink/8 px-1.5 py-0.5 font-mono">{demoAccount.password}</code>. Viene con
+          saldo y movimientos cargados.
+        </p>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => {
+            setEmail(demoAccount.email);
+            setPassword(demoAccount.password);
+            void entrar(demoAccount.email, demoAccount.password);
+          }}
+          className="btn-outline h-10 text-[13px]"
+        >
+          Entrar con la cuenta de prueba
+        </button>
+      </div>
     </form>
   );
 }

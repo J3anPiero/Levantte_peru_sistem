@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { round2 } from "@/lib/format";
+import { buildDemoWalletTxs, demoAccount, demoWalletBalance } from "@/data/demo-account";
 import { publicAccount, type Account, type CustomerType, type StoredAccount, type WalletTx, type WalletTxType } from "@/lib/wallet";
 
 /*
@@ -69,6 +70,40 @@ function writeAccounts(accounts: Record<string, StoredAccount>) {
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
+/*
+ * Deja lista la cuenta de demostración en este navegador. Se ejecuta una sola
+ * vez: si ya está, no se toca, para que el saldo y los movimientos que se
+ * generen comprando con ella no se pisen en cada recarga.
+ *
+ * Sale junto con src/data/demo-account.ts cuando el backend autentique de
+ * verdad. Ver la nota de ese archivo.
+ */
+async function seedDemoAccount() {
+  try {
+    const accounts = readAccounts();
+    if (accounts[demoAccount.email]) return;
+
+    const salt = randomSalt();
+    accounts[demoAccount.email] = {
+      id: "u_demo",
+      email: demoAccount.email,
+      nombres: demoAccount.nombres,
+      apellidos: demoAccount.apellidos,
+      telefono: demoAccount.telefono,
+      documento: demoAccount.documento,
+      customerType: demoAccount.customerType,
+      createdAt: new Date().toISOString(),
+      salt,
+      hash: await derive(demoAccount.password, salt),
+      wallet: { balance: demoWalletBalance, txs: buildDemoWalletTxs() },
+    };
+    writeAccounts(accounts);
+  } catch {
+    // Sin almacenamiento o sin crypto.subtle simplemente no hay cuenta de
+    // prueba; el registro normal sigue funcionando.
+  }
+}
+
 export interface RegisterInput {
   nombres: string;
   apellidos: string;
@@ -98,16 +133,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    try {
-      const id = window.localStorage.getItem(SESSION_KEY);
-      if (id) {
-        const account = Object.values(readAccounts()).find((a) => a.id === id);
-        if (account) setUser(publicAccount(account));
+    let alive = true;
+    void (async () => {
+      await seedDemoAccount();
+      if (!alive) return;
+      try {
+        const id = window.localStorage.getItem(SESSION_KEY);
+        if (id) {
+          const account = Object.values(readAccounts()).find((a) => a.id === id);
+          if (account) setUser(publicAccount(account));
+        }
+      } catch {
+        /* almacenamiento no disponible */
       }
-    } catch {
-      /* almacenamiento no disponible */
-    }
-    setHydrated(true);
+      setHydrated(true);
+    })();
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const register = useCallback(async (input: RegisterInput) => {
