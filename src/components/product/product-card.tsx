@@ -4,6 +4,7 @@ import { Check, Info } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { describeFit, fitsVehicle, productBrand, stockState, type VehicleQuery } from "@/lib/catalog";
 import { formatPrice } from "@/lib/format";
+import { FavoriteButton } from "@/components/favorites/favorite-button";
 import { PartIllustration } from "./part-illustration";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 
@@ -44,15 +45,21 @@ export function ProductCard({ product, vehicle, rank, compact }: Props) {
     : "Compatible con múltiples modelos";
 
   return (
-    <article className="product-card h-full">
-      <Link
-        href={`/producto/${product.slug}`}
-        className={clsx("product-media relative flex items-center justify-center overflow-hidden bg-mist", compact ? "h-[150px]" : "h-[210px]")}
-        aria-label={product.name}
-      >
+    <article className="product-card group/card h-full">
+      <div className={clsx("relative overflow-hidden", compact ? "h-[150px]" : "h-[210px]")}>
         <ProductBadge product={product} rank={rank} />
-        <PartIllustration kind={product.kind} size={compact ? 92 : 128} />
-      </Link>
+        {/* El corazón va fuera del enlace: dentro, pulsarlo navegaría a la ficha.
+            La clase product-media se queda en el enlace porque de ahí cuelga la
+            regla que agranda la ilustración al pasar el cursor. */}
+        <FavoriteButton product={product} />
+        <Link
+          href={`/producto/${product.slug}`}
+          className="product-media flex h-full items-center justify-center bg-mist"
+          aria-label={product.name}
+        >
+          <PartIllustration kind={product.kind} size={compact ? 92 : 128} />
+        </Link>
+      </div>
       <div className="flex flex-1 flex-col gap-1.5 p-4">
         <span className="text-[11px] font-bold tracking-[0.1em] text-muted uppercase">{brand.name}</span>
         <Link href={`/producto/${product.slug}`} className="text-[15px] leading-snug font-semibold text-ink no-underline transition-colors duration-300 hover:text-brand">

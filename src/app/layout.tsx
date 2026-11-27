@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Sora } from "next/font/google";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { CartProvider } from "@/components/cart/cart-provider";
+import { FavoritesProvider } from "@/components/favorites/favorites-provider";
 import { CartToast } from "@/components/cart/cart-toast";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -28,9 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" className={`${inter.variable} ${sora.variable}`}>
       <body className="min-h-screen">
         <AuthProvider>
+          {/* Favoritos va dentro del carrito porque reutiliza su aviso flotante. */}
           <CartProvider>
-            {children}
-            <CartToast />
+            <FavoritesProvider>
+              {children}
+              <CartToast />
+            </FavoritesProvider>
           </CartProvider>
         </AuthProvider>
       </body>

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import clsx from "clsx";
-import { ChevronDown, Heart, LayoutGrid, ScanLine } from "lucide-react";
+import { ChevronDown, LayoutGrid, ScanLine } from "lucide-react";
 import { topCategories, getChildren } from "@/data/categories";
 import { site } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
 import { CartBadge } from "@/components/cart/cart-badge";
 import { AccountBadge } from "@/components/auth/account-badge";
+import { FavoritesBadge } from "@/components/favorites/favorites-badge";
 import { SearchBar } from "@/components/search/search-bar";
 import { MobileMenu } from "./mobile-menu";
 
@@ -85,10 +86,7 @@ export function Header() {
 
         <div className="hidden items-center gap-1.5 md:flex">
           <AccountBadge />
-          <Link href="/cuenta" className="group flex min-w-16 flex-col items-center gap-1 px-2.5 py-1.5 text-xs text-[#c9c9d2] no-underline transition-colors hover:text-white">
-            <Heart className="size-[22px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-brand" strokeWidth={1.8} />
-            Favoritos
-          </Link>
+          <FavoritesBadge />
           <CartBadge />
         </div>
       </div>

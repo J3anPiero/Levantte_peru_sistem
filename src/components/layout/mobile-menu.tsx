@@ -15,6 +15,7 @@ const corporate = [
   { href: "/preguntas-frecuentes", label: "Preguntas frecuentes" },
   { href: "/contacto", label: "Contacto" },
   { href: "/cuenta", label: "Mi cuenta" },
+  { href: "/favoritos", label: "Favoritos" },
 ];
 
 export function MobileMenu({ categories }: { categories: Category[] }) {

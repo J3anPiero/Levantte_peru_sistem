@@ -251,6 +251,19 @@ en claro, pero cualquiera con las herramientas de desarrollo puede leer o editar
 seguridad real. Al conectar la API, `src/components/auth/auth-provider.tsx` debe pasar a llamar al
 backend y el saldo debe calcularse y validarse en el servidor.
 
+## Favoritos
+
+`src/components/favorites/` guarda una lista de identificadores de producto en `localStorage`
+(`gaudi-favorites-v1`) y la expone en `/favoritos`. El corazón aparece sobre cada tarjeta del
+catálogo y en la ficha; la cabecera lleva el contador.
+
+Se guardan identificadores y no productos a propósito: el catálogo se regenera, y una copia del
+producto quedaría desactualizada en precio y stock. Al leer se descartan los que ya no existen, para
+que un repuesto descatalogado no rompa la página.
+
+Como el carrito, es por navegador y no viaja con la cuenta. Cuando entre el backend, la lista
+debería colgar del usuario para que se vea también desde el celular.
+
 ## Cupones de prueba
 
 `FRENOS20` (20 % en frenos) y `BIENVENIDO10` (10 % general), definidos en `cart-provider.tsx`.
