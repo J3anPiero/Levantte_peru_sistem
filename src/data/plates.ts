@@ -150,10 +150,17 @@ export const vehicleRegistry: Record<string, VehicleRecord> = Object.fromEntries
   ]),
 );
 
-/** Placas sugeridas en la interfaz para que cualquiera pueda probar el buscador. */
+/**
+ * Placas sugeridas en la interfaz para que cualquiera pueda probar el buscador.
+ * Llevan carrocería y color porque cada sugerencia se dibuja: ocho placas en
+ * fila son ocho cadenas indistinguibles, y la silueta deja ver de un vistazo
+ * que hay una pickup, un hatchback y varios sedanes entre ellas.
+ */
 export const samplePlates = seeds.map((s) => ({
   plate: s.plate,
   label: `${s.make} ${s.model} ${s.year}`,
+  bodyType: s.bodyType,
+  color: s.color,
 }));
 
 /**

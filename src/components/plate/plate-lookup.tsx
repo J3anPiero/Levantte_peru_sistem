@@ -9,6 +9,7 @@ import { explainVin, formatPlate, isValidPlate, type VehicleRecord } from "@/lib
 import { teardown, teardownTotals, type ZoneResult } from "@/lib/teardown";
 import { ProductCard } from "@/components/product/product-card";
 import { CarDiagram } from "./car-diagram";
+import { VehicleArt } from "./vehicle-art";
 
 type Status = "idle" | "loading" | "found" | "notfound";
 
@@ -170,9 +171,21 @@ export function PlateLookup({ initialPlate = "" }: { initialPlate?: string }) {
                     setPlate(s.plate);
                     void search(s.plate);
                   }}
-                  className="cursor-pointer rounded-full border border-white/20 px-3 py-1.5 text-[13px] text-muted-2 transition-colors hover:border-brand hover:text-white"
+                  className="group flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 py-1.5 pr-4 pl-2 text-[13px] text-muted-2 transition-colors hover:border-brand hover:text-white"
                 >
-                  <strong className="font-display tracking-wider text-white">{s.plate}</strong> · {s.label}
+                  {/* Fondo claro bajo cada silueta: sobre el panel negro, un Sportage
+                      negro o un Fortuner grafito desaparecerían. */}
+                  <span className="flex h-7 w-[59px] shrink-0 items-center overflow-hidden rounded-full bg-gradient-to-b from-white to-[#d9dce2]">
+                    <VehicleArt
+                      bodyType={s.bodyType}
+                      color={s.color}
+                      label=""
+                      className="w-full transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </span>
+                  <span>
+                    <strong className="font-display tracking-wider text-white">{s.plate}</strong> · {s.label}
+                  </span>
                 </button>
               ))}
             </div>
@@ -202,6 +215,32 @@ export function PlateLookup({ initialPlate = "" }: { initialPlate?: string }) {
                   {vehicle.plate}
                 </span>
               </div>
+
+              {/* La imagen va antes que la ficha porque es lo que confirma de un
+                  vistazo que la placa trajo el vehículo correcto: si alguien
+                  tecleó mal un dígito, ve una pickup donde esperaba su sedán
+                  antes de leer una sola línea de texto. El pie dice que es una
+                  ilustración; en una tienda de repuestos, dar por foto lo que no
+                  lo es termina en una pieza que no calza. */}
+              <figure className="m-0 flex flex-col gap-2">
+                {/* El fondo es claro y no negro: la mitad del padrón son autos
+                    blancos o plata, pero el otro medio son negros y grafito, y
+                    sobre negro esos no se ven. En claro se leen los ocho. */}
+                <div className="relative overflow-hidden rounded-xl bg-gradient-to-b from-[#eaedf2] via-[#dadfe7] to-[#c3c9d4] px-4 pt-3 pb-1">
+                  <div aria-hidden="true" className="pointer-events-none absolute -top-24 left-1/2 size-64 -translate-x-1/2 rounded-full bg-white/70 blur-[70px]" />
+                  <VehicleArt
+                    key={vehicle.plate}
+                    bodyType={vehicle.bodyType}
+                    color={vehicle.color}
+                    className="relative w-full animate-fade-up"
+                  />
+                </div>
+                <figcaption className="m-0 text-[11px] leading-relaxed text-muted">
+                  Ilustración referencial: reproduce la carrocería ({vehicle.bodyType.toLowerCase()}) y el color
+                  registrado ({vehicle.color.toLowerCase()}). No es una fotografía de la unidad.
+                </figcaption>
+              </figure>
+
               <h2 className="text-2xl font-bold tracking-tight">
                 {vehicle.make} {vehicle.model} {vehicle.year}
               </h2>
@@ -247,7 +286,14 @@ export function PlateLookup({ initialPlate = "" }: { initialPlate?: string }) {
 
             <div className="grid items-start gap-6 lg:grid-cols-[1.1fr_1fr]">
               <div className="rounded-xl bg-mist p-4">
-                <CarDiagram zones={result} selected={selected} onSelect={setSelected} label={`${vehicle.make} ${vehicle.model}`} />
+                <CarDiagram
+                  zones={result}
+                  selected={selected}
+                  onSelect={setSelected}
+                  label={`${vehicle.make} ${vehicle.model}`}
+                  bodyType={vehicle.bodyType}
+                  color={vehicle.color}
+                />
               </div>
 
               <ul className="m-0 flex list-none flex-col gap-1.5 p-0">

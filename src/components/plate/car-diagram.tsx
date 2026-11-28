@@ -2,58 +2,35 @@
 
 import clsx from "clsx";
 import type { ZoneResult } from "@/lib/teardown";
-
-const VIEW_W = 400;
-const VIEW_H = 190;
+import { VIEW_H, VIEW_W, VehicleArt } from "./vehicle-art";
 
 interface Props {
   zones: ZoneResult[];
   selected: string | null;
   onSelect: (id: string | null) => void;
   label: string;
+  bodyType: string;
+  color: string;
 }
 
 /**
- * Vista lateral del vehículo con un punto por sistema. Los puntos son botones
- * HTML colocados sobre el dibujo, no elementos del SVG, para que funcionen con
- * teclado y lector de pantalla como cualquier otro control.
+ * Vista lateral del vehículo con un punto por sistema. El dibujo es el mismo de
+ * `VehicleArt`, en su variante de esquema: así una Hilux se despieza con forma
+ * de pickup y no con la silueta de sedán que servía para todos.
+ *
+ * Los puntos son botones HTML colocados sobre el dibujo, no elementos del SVG,
+ * para que funcionen con teclado y lector de pantalla como cualquier control.
  */
-export function CarDiagram({ zones, selected, onSelect, label }: Props) {
+export function CarDiagram({ zones, selected, onSelect, label, bodyType, color }: Props) {
   return (
     <div className="relative w-full" style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}>
-      <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className="absolute inset-0 size-full" role="img" aria-label={`Vista lateral de ${label}`}>
-        <ellipse cx="200" cy="178" rx="186" ry="7" fill="rgba(225,6,0,0.16)" />
-
-        {/* Carrocería */}
-        <path
-          d="M16 142 L20 116 Q24 106 40 104 L120 98 L152 64 Q157 58 168 58 L250 58 Q261 58 266 64 L296 98 L372 104 Q384 106 384 118 L384 142 Z"
-          fill="#17171b"
-          stroke="#e10600"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-
-        {/* Lunas */}
-        <path d="M156 66 L193 66 L193 94 L131 94 Z" fill="#26262d" />
-        <path d="M207 66 L246 66 L270 94 L207 94 Z" fill="#26262d" />
-
-        {/* Líneas de puertas y manijas */}
-        <path d="M200 96 L200 138 M272 96 L272 138" stroke="#32323b" strokeWidth="1.5" />
-        <rect x="214" y="106" width="15" height="3" rx="1.5" fill="#32323b" />
-        <rect x="284" y="106" width="15" height="3" rx="1.5" fill="#32323b" />
-
-        {/* Faro y luz posterior */}
-        <path d="M22 112 L38 109 L38 119 L22 121 Z" fill="#e10600" opacity="0.85" />
-        <path d="M378 110 L384 110 L384 122 L376 122 Z" fill="#8c0300" />
-
-        {/* Ruedas */}
-        {[105, 300].map((cx) => (
-          <g key={cx}>
-            <circle cx={cx} cy="150" r="27" fill="#0a0a0b" stroke="#32323b" strokeWidth="3" />
-            <circle cx={cx} cy="150" r="12" fill="#1c1c21" stroke="#4a4a55" strokeWidth="2" />
-          </g>
-        ))}
-      </svg>
+      <VehicleArt
+        bodyType={bodyType}
+        color={color}
+        variant="plano"
+        className="absolute inset-0 size-full"
+        label={`Vista lateral de ${label}`}
+      />
 
       {zones.map((zone, i) => {
         const isSelected = selected === zone.id;

@@ -212,8 +212,32 @@ las piezas del catálogo que le corresponden, marcando cuáles tienen stock.
 - `src/lib/teardown.ts` define las siete zonas del despiece y las cruza con el catálogo. Una pieza sin
   compatibilidades declaradas (líquido de frenos, por ejemplo) se marca como universal en vez de
   descartarse.
-- `src/components/plate/car-diagram.tsx` dibuja el vehículo de perfil. Los puntos son botones HTML
-  sobre el SVG, no elementos del dibujo, para que funcionen con teclado y lector de pantalla.
+- `src/components/plate/vehicle-art.tsx` dibuja el vehículo. Ver [Imagen del vehículo](#imagen-del-vehículo).
+- `src/components/plate/car-diagram.tsx` coloca los puntos del despiece sobre ese dibujo. Son botones
+  HTML sobre el SVG, no elementos del dibujo, para que funcionen con teclado y lector de pantalla.
+
+### Imagen del vehículo
+
+Cuando la placa devuelve un vehículo, la ficha lo muestra dibujado: `VehicleArt` elige entre cuatro
+siluetas (sedán, hatchback, SUV y pickup) según el campo `bodyType` y la pinta con el `color` del
+padrón. Las mismas siluetas aparecen en miniatura en las placas de prueba y, en su variante de
+esquema, en el despiece: así una Hilux se despieza con forma de pickup y no con la silueta de sedán
+que antes servía para todos.
+
+**Son ilustraciones, no fotografías, y la interfaz lo dice.** Una foto del modelo exacto exigiría
+licenciarla y verificarla por marca, modelo y año; una foto equivocada en una tienda de repuestos
+termina en una pieza que no calza. Lo que sí es verificable es lo que trae el padrón —carrocería y
+color—, y eso es lo que se dibuja: alcanza para confirmar de un vistazo que la placa trajo el
+vehículo correcto.
+
+Dos detalles del dibujo que conviene conocer antes de tocarlo:
+
+- **El eje delantero está clavado en `x = 105` y el suelo en `y = 150`.** Los puntos del despiece
+  viven en `teardown.ts` con coordenadas fijas sobre el mismo lienzo de 400 × 190, así que una
+  silueta que mueva la rueda delantera deja el punto de frenos en el aire. El eje trasero sí se
+  mueve: ninguna zona lo usa de referencia y una doble cabina es más larga.
+- **El fondo de la ilustración es claro a propósito.** La mitad del padrón son autos blancos o plata
+  y la otra mitad negros o grafito; sobre negro, los oscuros desaparecen.
 
 **Ninguna placa ni VIN corresponde a un vehículo real.** En producción la consulta debe resolverse
 contra el servicio oficial (en Perú, SUNARP o el MTC): son datos personales de terceros y su
